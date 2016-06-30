@@ -55,7 +55,7 @@ export OCTANE_PATCHES="$STABLE8_PATCHES"
 
 
 rm -rf fuel-qa8.0
-git_change_request https://github.com/openstack/fuel-qa stable/8.0 fuel-qa8.0 321611
+git_change_request https://github.com/openstack/fuel-qa stable/8.0 fuel-qa8.0 335380 321611
 cd fuel-qa8.0
 
 pip install -r fuelweb_test/requirements.txt --upgrade
