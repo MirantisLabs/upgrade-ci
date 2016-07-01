@@ -48,7 +48,6 @@ unset OCTANE_PATCHES
 (
 
 export ISO_PATH=${HOME}/iso/MirantisOpenStack-8.0.iso
-#export FUEL_PROPOSED_REPO_URL="http://perestroika-repo-tst.infra.mirantis.net/mos-repos/centos/mos8.0-centos7-fuel/proposed/x86_64/"
 export FUEL_PROPOSED_REPO_URL="http://packages.fuel-infra.org/repositories/centos/liberty-centos7/proposed/x86_64/"
 export UPDATE_MASTER=true
 export OCTANE_PATCHES="$STABLE8_PATCHES"
