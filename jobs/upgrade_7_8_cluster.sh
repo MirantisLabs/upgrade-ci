@@ -1,5 +1,8 @@
 . ${HOME}/.bash_profile
 
+export MIRROR_UBUNTU='deb http://mirror.seed-cz1.fuel-infra.org/pkgs/ubuntu-latest/ trusty main universe multiverse|deb http://mirror.seed-cz1.fuel-infra.org/pkgs/ubuntu-latest/ trusty-updates main universe multiverse|deb http://mirror.seed-cz1.fuel-infra.org/pkgs/ubuntu-latest/ trusty-security main universe multiverse'
+
+
 BUILD_ID=${CUSTOM_BUILD_ID:-${BUILD_ID}}
 
 JOB_MD5SUM=`echo ${JOB_NAME} | md5sum - | cut -d" " -f1`
@@ -51,6 +54,7 @@ virtualenv ${VENV_PATH}
 unset OCTANE_PATCHES
 
 (
+   
    
 export UPDATE_FUEL_MIRROR="http://mirror.seed-cz1.fuel-infra.org/mos-repos/centos/mos8.0-centos7-fuel/proposed/x86_64/"
 export EXTRA_DEB_REPOS="mos-proposed,deb http://mirror.seed-cz1.fuel-infra.org/mos-repos/ubuntu/8.0 mos8.0-proposed main restricted"
