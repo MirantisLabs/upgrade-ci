@@ -145,7 +145,7 @@ cd fuel-qa8.0
 pip install -r fuelweb_test/requirements.txt
 
 
-bash -x ./utils/jenkins/system_tests.sh -t test -w $(pwd) -j fuelweb_test -i $ISO_PATH -k -K -o --group=upgrade_ceph_ha_restore
+bash -x ./utils/jenkins/system_tests.sh -t test -w $(pwd) -j fuelweb_test -i $ISO_PATH -k -K -o --group=upgrade_ceph_ha_restore -o --group=upgrade_old_nodes
 
 )
 
