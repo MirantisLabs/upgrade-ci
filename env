@@ -15,6 +15,23 @@ git_change_request() {
         )
 }
 
+fuel9_fix_devops_requirement() {
+cat<<\EOF
+diff --git a/fuelweb_test/requirements.txt b/fuelweb_test/requirements.txt
+index f842acc..46619c3 100644
+--- a/fuelweb_test/requirements.txt
++++ b/fuelweb_test/requirements.txt
+@@ -1,5 +1,5 @@
+ nose==1.2.1
+-git+git://github.com/openstack/fuel-devops.git@2.9.20
++git+git://github.com/openstack/fuel-devops.git@release/2.9
+ anyjson==0.3.1
+ paramiko
+ proboscis==1.2.6.0
+EOF
+}
+
+
 export ALWAYS_CREATE_DIAGNOSTIC_SNAPSHOT=false
 export LOGS_DIR=${BUILD_DIR}/logs
 export UPDATE_MASTER=true
