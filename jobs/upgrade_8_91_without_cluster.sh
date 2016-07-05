@@ -64,6 +64,7 @@ git_change_request https://github.com/openstack/fuel-qa stable/mitaka fuel-qa-mi
 
 (
 cd fuel-qa-mitaka
+fuel9_fix_devops_requirement | patch -p1
 pip install -r fuelweb_test/requirements.txt
 pip uninstall -y fuel-devops
 (
