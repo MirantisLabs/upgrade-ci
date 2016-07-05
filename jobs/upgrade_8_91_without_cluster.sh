@@ -45,7 +45,7 @@ export OCTANE_PATCHES="$STABLE8_PATCHES"
 
 
 rm -rf fuel-qa8.0
-git_change_request https://github.com/openstack/fuel-qa stable/8.0 fuel-qa8.0  321611
+git_change_request https://github.com/openstack/fuel-qa stable/8.0 fuel-qa8.0  321611 ${FUEL_QA_STABLE8_PATCHES}
 cd fuel-qa8.0
 
 pip install -r fuelweb_test/requirements.txt --upgrade
@@ -59,7 +59,7 @@ unset OCTANE_PATCHES
 
 export OCTANE_PATCHES="$STABLE9_PATCHES"
 rm -rf fuel-qa-mitaka
-git_change_request https://github.com/openstack/fuel-qa stable/mitaka fuel-qa-mitaka 332077 332743
+git_change_request https://github.com/openstack/fuel-qa stable/mitaka fuel-qa-mitaka 332077 332743 ${FUEL_QA_STABLE9_PATCHES}
 
 
 (
