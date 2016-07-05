@@ -1,5 +1,3 @@
-. ${HOME}/.bash_profile
-
 export MIRROR_UBUNTU='deb http://mirror.seed-cz1.fuel-infra.org/pkgs/ubuntu-latest/ trusty main universe multiverse|deb http://mirror.seed-cz1.fuel-infra.org/pkgs/ubuntu-latest/ trusty-updates main universe multiverse|deb http://mirror.seed-cz1.fuel-infra.org/pkgs/ubuntu-latest/ trusty-security main universe multiverse'
 
 
@@ -57,3 +55,26 @@ bash -x ./utils/jenkins/system_tests.sh -t test -w $(pwd) -j fuelweb_test -i $IS
 )
 
 unset OCTANE_PATCHES
+
+
+export OCTANE_PATCHES="$STABLE9_PATCHES"
+rm -rf fuel-qa-mitaka
+git_change_request https://github.com/openstack/fuel-qa stable/mitaka fuel-qa-mitaka 332077 332743
+
+
+(
+cd fuel-qa-mitaka
+pip install -r fuelweb_test/requirements.txt
+pip uninstall -y fuel-devops
+(
+git clone git://github.com/openstack/fuel-devops.git -b release/2.9
+cd fuel-devops
+cr_patch `pwd` 326462 327180 327656 331120
+pip install .
+)
+
+
+bash -x ./utils/jenkins/system_tests.sh -t test -w $(pwd) -j fuelweb_test -i $ISO_PATH -k -K -o --group=upgrade_no_cluster_backup
+bash -x ./utils/jenkins/system_tests.sh -t test -w $(pwd) -j fuelweb_test -i $ISO_PATH -k -K -o --group=upgrade_no_cluster_tests
+
+)
