@@ -28,6 +28,7 @@ export VENV_PATH=${BUILD_DIR}/fuel-qa-venv
 export FUEL_PROPOSED_REPO_URL="http://perestroika-repo-tst.infra.mirantis.net/mos-repos/centos/mos7.0-centos6-fuel/proposed/x86_64"
 export OCTANE_PATCHES="$STABLE7_PATCHES"
 export ALWAYS_CREATE_DIAGNOSTIC_SNAPSHOT=false
+export MAKE_SNAPSHOT=true
 
 
 
