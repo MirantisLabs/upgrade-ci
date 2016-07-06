@@ -59,6 +59,7 @@ unset OCTANE_PATCHES
 
 export OCTANE_PATCHES="$STABLE9_PATCHES"
 export ISO_PATH=${HOME}/iso/MirantisOpenStack-9.0-RC2.iso
+export FUEL_PROPOSED_REPO_URL="http://perestroika-repo-tst.infra.mirantis.net/mos-repos/centos/mos9.0-centos7/os/x86_64/"
 rm -rf fuel-qa-mitaka
 git_change_request https://github.com/openstack/fuel-qa stable/mitaka fuel-qa-mitaka 332743 ${FUEL_QA_STABLE9_PATCHES}
 
