@@ -58,12 +58,9 @@ pip uninstall -y fuel-devops
 (
 git clone git://github.com/openstack/fuel-devops.git -b release/2.9
 cd fuel-devops
-cr_patch `pwd` 326462 327180 327656 331120
 pip install .
 )
 
+bash -x ./utils/jenkins/system_tests.sh -t test -w $(pwd) -j fuelweb_test -i $ISO_PATH -k -K -o --group=upgrade_smoke_backup -o --group=upgrade_smoke_scale --group=upgrade_smoke_new_deployment
 
-bash -x ./utils/jenkins/system_tests.sh -t test -w $(pwd) -j fuelweb_test -i $ISO_PATH -k -K -o --group=upgrade_smoke_backup
-bash -x ./utils/jenkins/system_tests.sh -t test -w $(pwd) -j fuelweb_test -i $ISO_PATH -k -K -o --group=upgrade_smoke_scale
-bash -x ./utils/jenkins/system_tests.sh -t test -w $(pwd) -j fuelweb_test -i $ISO_PATH -k -K -o --group=upgrade_smoke_new_deployment
 )
