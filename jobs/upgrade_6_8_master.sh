@@ -9,6 +9,7 @@ BUILD_DIR="${HOME}/workdir/${JOB_MD5SUM}-${BUILD_ID}"
 export LOGS_DIR=${HOME}/logs
 export KEYSTONE_PASSWORD=admin1
 export UPDATE_MASTER=true
+export MAKE_SNAPSHOT=true
 
 export VENV_PATH=${BUILD_DIR}/fuel-devops-venv-2.5/
 
