@@ -15,7 +15,7 @@ export UPDATE_MASTER=true
 export LOGS_DIR=${BUILD_DIR}/logs
 
 export ISO_PATH=${HOME}/iso/MirantisOpenStack-8.0.iso
-export NODES_COUNT=1
+export NODES_COUNT=10
 export ENV_NAME=upgrade_master_8_91_${BUILD_ID}
 export VENV_PATH=${BUILD_DIR}/fuel-qa-venv
 
