@@ -60,7 +60,7 @@ unset OCTANE_PATCHES
 export OCTANE_PATCHES="$STABLE9_PATCHES"
 export ISO_PATH=${HOME}/iso/MirantisOpenStack-9.0-RC2.iso
 rm -rf fuel-qa-mitaka
-git_change_request https://github.com/openstack/fuel-qa stable/mitaka fuel-qa-mitaka 332077 332743 ${FUEL_QA_STABLE9_PATCHES}
+git_change_request https://github.com/openstack/fuel-qa stable/mitaka fuel-qa-mitaka 332743 ${FUEL_QA_STABLE9_PATCHES}
 
 
 (
