@@ -45,7 +45,7 @@ virtualenv ${VENV_PATH}
 . ${VENV_PATH}/bin/activate
 
 rm -rf fuel-qa-mitaka
-git_change_request https://github.com/openstack/fuel-qa stable/mitaka fuel-qa-mitaka 333219 333464
+git_change_request https://github.com/openstack/fuel-qa stable/mitaka fuel-qa-mitaka  
 
 
 
