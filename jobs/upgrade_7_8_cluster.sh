@@ -46,7 +46,7 @@ virtualenv ${VENV_PATH}
 
 (
    rm -rf fuel-qa7.0
-   git_change_request https://github.com/openstack/fuel-qa stable/7.0 fuel-qa7.0
+   git_change_request https://github.com/openstack/fuel-qa stable/7.0 fuel-qa7.0 ${FUEL_QA_STABLE7_PATCHES}
    cd fuel-qa7.0
 
    pip install -r ./fuelweb_test/requirements.txt --upgrade
@@ -68,7 +68,7 @@ export OCTANE_PATCHES="$STABLE8_PATCHES"
 
 
 rm -rf fuel-qa8.0
-git_change_request https://github.com/openstack/fuel-qa stable/8.0 fuel-qa8.0  321611 337691
+git_change_request https://github.com/openstack/fuel-qa stable/8.0 fuel-qa8.0 ${FUEL_QA_STABLE8_PATCHES}
 cd fuel-qa8.0
 
 pip install -r fuelweb_test/requirements.txt --upgrade
