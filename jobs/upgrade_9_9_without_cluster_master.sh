@@ -12,7 +12,7 @@ export UPDATE_MASTER=true
 
 export VENV_PATH=${BUILD_DIR}/fuel-devops-venv
 
-export ISO_PATH=${HOME}/iso/fuel-9.0-443-2016-06-15_08-00-00.iso
+export ISO_PATH=${HOME}/iso/MirantisOpenStack-9.0.iso
 export NODES_COUNT=7
 export ENV_NAME=backup_restore_9_NO_CLUSTER_${BUILD_ID}
 export LOGS_DIR=${BUILD_DIR}/logs
