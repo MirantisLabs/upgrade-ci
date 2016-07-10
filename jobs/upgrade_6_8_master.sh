@@ -83,11 +83,9 @@ export TARBALL_PATH=${HOME}/iso/MirantisOpenStack-6.1-upgrade.tar.lrz
 export ISO_PATH=${HOME}/iso/MirantisOpenStack-6.1.iso
 
 rm -rf fuel-qa6.1
-git_change_request https://github.com/openstack/fuel-qa stable/6.1 fuel-qa6.1
-cd fuel-qa6.1
+git_change_request https://github.com/openstack/fuel-qa stable/6.1 fuel-qa6.1 ${QA_STABLE61_PATCHES}	
 
-fuel61_fix_pyssl_requirement | patch -p1
-fuel61_add_upgrade_step | patch -p1
+cd fuel-qa6.1
 
 pip install -r fuelweb_test/requirements.txt
 
@@ -105,7 +103,7 @@ export TARBALL_PATH=${HOME}/iso/MirantisOpenStack-7.0-upgrade.tar.lrz
 export ISO_PATH=${HOME}/iso/MirantisOpenStack-7.0.iso
 
 rm -rf fuel-qa7.0
-git_change_request https://github.com/openstack/fuel-qa stable/7.0 fuel-qa7.0
+git_change_request https://github.com/openstack/fuel-qa stable/7.0 fuel-qa7.0 ${QA_STABLE8_PATCHES}
 cd fuel-qa7.0
 
 pip install -r fuelweb_test/requirements.txt
