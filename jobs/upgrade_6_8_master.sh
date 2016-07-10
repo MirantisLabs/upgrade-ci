@@ -46,6 +46,7 @@ git_change_request https://github.com/openstack/fuel-main stable/6.0 fuel-main6.
 
 
 (
+export OCTANE_PATCHES=${OCTANE_STABLE6_PATCHES}	
 
 cd fuel-main6.0
 
@@ -62,6 +63,7 @@ pip install -U .
 #
 
 bash -x ./utils/jenkins/system_tests.sh -t test -w $(pwd) -j fuelweb_test -i $ISO_PATH -k -K -o --group=promo_bvt
+unset OCTANE_PATCHES
 )
 
 deactivate
@@ -79,6 +81,8 @@ export UPGRADE_FUEL_FROM=6.0
 export UPGRADE_FUEL_TO=6.1
 export TARBALL_PATH=${HOME}/iso/MirantisOpenStack-6.1-upgrade.tar.lrz
 export ISO_PATH=${HOME}/iso/MirantisOpenStack-6.1.iso
+export OCTANE_PATCHES=${OCTANE_STABLE61_PATCHES}	
+
 
 rm -rf fuel-qa6.1
 git_change_request https://github.com/openstack/fuel-qa stable/6.1 fuel-qa6.1 ${QA_STABLE61_PATCHES}	
@@ -89,6 +93,7 @@ pip install -r fuelweb_test/requirements.txt
 
 bash -x ./utils/jenkins/system_tests.sh -t test -w $(pwd) -j fuelweb_test -i $ISO_PATH -k -K -o --group=upgrade_ha_one_controller
 
+unset OCTANE_PATCHES
 )
 
 echo "UPDATE devops_node SET role = CASE WHEN name LIKE 'slave%' THEN 'fuel_slave' ELSE 'fuel_master' END" | sudo -u postgres psql fuel_devops
@@ -99,15 +104,13 @@ export UPGRADE_FUEL_FROM=6.1
 export UPGRADE_FUEL_TO=7.0
 export TARBALL_PATH=${HOME}/iso/MirantisOpenStack-7.0-upgrade.tar.lrz
 export ISO_PATH=${HOME}/iso/MirantisOpenStack-7.0.iso
+export OCTANE_PATCHES=${OCTANE_STABLE7_PATCHES}
 
 rm -rf fuel-qa7.0
-git_change_request https://github.com/openstack/fuel-qa stable/7.0 fuel-qa7.0 ${QA_STABLE8_PATCHES}
+git_change_request https://github.com/openstack/fuel-qa stable/7.0 fuel-qa7.0 ${QA_STABLE7_PATCHES}
 cd fuel-qa7.0
 
 pip install -r fuelweb_test/requirements.txt
-
-fuel7_change_upgrade_step | patch -p1
-fuel7_change_backup_workflow | patch -p1
 
 export UPDATE_MASTER=true
 
@@ -120,7 +123,7 @@ export FUEL_PROPOSED_REPO_URL="http://perestroika-repo-tst.infra.mirantis.net/mo
 
 
 bash -x ./utils/jenkins/system_tests.sh -t test -w $(pwd) -j fuelweb_test -i $ISO_PATH -k -K -o --group=upgrade_ceph_ha_backup
-
+unset OCTANE_PATCHES
 )
 
 deactivate
@@ -134,15 +137,16 @@ virtualenv ${VENV_PATH}
 export ISO_PATH=${HOME}/iso/MirantisOpenStack-8.0.iso
 export FUEL_PROPOSED_REPO_URL="http://packages.fuel-infra.org/repositories/centos/liberty-centos7/proposed/x86_64/"
 export UPDATE_MASTER=true
+export OCTANE_PATCHES=${OCTANE_STABLE8_PATCHES}
 
 rm -rf fuel-qa8.0
-git_change_request https://github.com/openstack/fuel-qa stable/8.0 fuel-qa8.0 331702
+git_change_request https://github.com/openstack/fuel-qa stable/8.0 fuel-qa8.0 ${QA_STABLE8_PATCHES}
 cd fuel-qa8.0
 
 pip install -r fuelweb_test/requirements.txt
 
 
 bash -x ./utils/jenkins/system_tests.sh -t test -w $(pwd) -j fuelweb_test -i $ISO_PATH -k -K -o --group=upgrade_ceph_ha_restore -o --group=upgrade_old_nodes
-
+unset OCTANE_PATCHES
 )
 
