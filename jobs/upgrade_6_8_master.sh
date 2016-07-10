@@ -46,7 +46,7 @@ git_change_request https://github.com/openstack/fuel-main stable/6.0 fuel-main6.
 
 
 (
-export OCTANE_PATCHES=${OCTANE_STABLE6_PATCHES}	
+export OCTANE_PATCHES="${OCTANE_STABLE6_PATCHES}"	
 
 cd fuel-main6.0
 
@@ -81,7 +81,7 @@ export UPGRADE_FUEL_FROM=6.0
 export UPGRADE_FUEL_TO=6.1
 export TARBALL_PATH=${HOME}/iso/MirantisOpenStack-6.1-upgrade.tar.lrz
 export ISO_PATH=${HOME}/iso/MirantisOpenStack-6.1.iso
-export OCTANE_PATCHES=${OCTANE_STABLE61_PATCHES}	
+export OCTANE_PATCHES="${OCTANE_STABLE61_PATCHES}"	
 
 
 rm -rf fuel-qa6.1
@@ -104,7 +104,7 @@ export UPGRADE_FUEL_FROM=6.1
 export UPGRADE_FUEL_TO=7.0
 export TARBALL_PATH=${HOME}/iso/MirantisOpenStack-7.0-upgrade.tar.lrz
 export ISO_PATH=${HOME}/iso/MirantisOpenStack-7.0.iso
-export OCTANE_PATCHES=${OCTANE_STABLE7_PATCHES}
+export OCTANE_PATCHES="${OCTANE_STABLE7_PATCHES}"
 
 rm -rf fuel-qa7.0
 git_change_request https://github.com/openstack/fuel-qa stable/7.0 fuel-qa7.0 ${QA_STABLE7_PATCHES}
@@ -137,7 +137,7 @@ virtualenv ${VENV_PATH}
 export ISO_PATH=${HOME}/iso/MirantisOpenStack-8.0.iso
 export FUEL_PROPOSED_REPO_URL="http://packages.fuel-infra.org/repositories/centos/liberty-centos7/proposed/x86_64/"
 export UPDATE_MASTER=true
-export OCTANE_PATCHES=${OCTANE_STABLE8_PATCHES}
+export OCTANE_PATCHES="${OCTANE_STABLE8_PATCHES}"
 
 rm -rf fuel-qa8.0
 git_change_request https://github.com/openstack/fuel-qa stable/8.0 fuel-qa8.0 ${QA_STABLE8_PATCHES}
