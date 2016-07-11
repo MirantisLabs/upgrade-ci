@@ -63,9 +63,9 @@ pip install -U .
 #
 
 bash -x ./utils/jenkins/system_tests.sh -t test -w $(pwd) -j fuelweb_test -i $ISO_PATH -k -K -o --group=promo_bvt
-unset OCTANE_PATCHES
-)
 
+)
+unset OCTANE_PATCHES
 deactivate
 
 VENV_PATH="${BUILD_DIR}/fuel-devops-venv/"
@@ -93,9 +93,9 @@ pip install -r fuelweb_test/requirements.txt
 
 bash -x ./utils/jenkins/system_tests.sh -t test -w $(pwd) -j fuelweb_test -i $ISO_PATH -k -K -o --group=upgrade_ha_one_controller
 
-unset OCTANE_PATCHES
-)
 
+)
+unset OCTANE_PATCHES
 echo "UPDATE devops_node SET role = CASE WHEN name LIKE 'slave%' THEN 'fuel_slave' ELSE 'fuel_master' END" | sudo -u postgres psql fuel_devops
 
 (
@@ -123,9 +123,9 @@ export FUEL_PROPOSED_REPO_URL="http://perestroika-repo-tst.infra.mirantis.net/mo
 
 
 bash -x ./utils/jenkins/system_tests.sh -t test -w $(pwd) -j fuelweb_test -i $ISO_PATH -k -K -o --group=upgrade_ceph_ha_backup
-unset OCTANE_PATCHES
-)
 
+)
+unset OCTANE_PATCHES
 deactivate
 
 VENV_PATH="${BUILD_DIR}/fuel-devops-venv-8.0/"
@@ -147,6 +147,6 @@ pip install -r fuelweb_test/requirements.txt
 
 
 bash -x ./utils/jenkins/system_tests.sh -t test -w $(pwd) -j fuelweb_test -i $ISO_PATH -k -K -o --group=upgrade_ceph_ha_restore -o --group=upgrade_old_nodes
-unset OCTANE_PATCHES
-)
 
+)
+unset OCTANE_PATCHES
