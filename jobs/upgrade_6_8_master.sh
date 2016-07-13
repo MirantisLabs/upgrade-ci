@@ -13,7 +13,7 @@ export VENV_PATH=${BUILD_DIR}/fuel-devops-venv-2.5/
 
 export ISO_PATH=${HOME}/iso/MirantisOpenStack-6.0.iso
 export NODES_COUNT=12
-export ENV_NAME=upgrade_6_8_${BUILD_ID}
+export ENV_NAME=upgrade_6_8_mos_${BUILD_ID}
 export LOGS_DIR=${BUILD_DIR}/logs
 
 
