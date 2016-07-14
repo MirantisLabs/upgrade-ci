@@ -1,3 +1,4 @@
+set -e
 
 show_only_unmerged() {
   xargs -tI% sh -c 'curl -s "https://review.openstack.org/changes/%/detail?O=2002" | grep -q "\"status\": \"MERGED\"" && (echo http://review.openstack.org/% MERGED > /dev/stderr) || echo %'
