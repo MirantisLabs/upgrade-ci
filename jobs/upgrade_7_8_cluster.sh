@@ -47,8 +47,8 @@ virtualenv ${VENV_PATH}
    git_change_request https://github.com/openstack/fuel-qa stable/7.0 fuel-qa7.0 ${FUEL_QA_STABLE7_PATCHES}
    cd fuel-qa7.0
 
-   pip install -r ./fuelweb_test/requirements.txt --upgrade
-   bash -x ./utils/jenkins/system_tests.sh -t test -w $(pwd) -j fuelweb_test -i $ISO_PATH -k -K -o --group=upgrade_ceph_ha_backup
+   pip install -r fuelweb_test/requirements-devops-source.txt --upgrade
+   bash -x ./utils/jenkins/system_tests.sh -N -w $(pwd) -j fuelweb_test -i $ISO_PATH -k -K -o --group=upgrade_ceph_ha_backup
 )
 unset OCTANE_PATCHES
 
@@ -68,9 +68,8 @@ export OCTANE_PATCHES="$STABLE8_PATCHES"
 rm -rf fuel-qa8.0
 git_change_request https://github.com/openstack/fuel-qa stable/8.0 fuel-qa8.0 ${FUEL_QA_STABLE8_PATCHES}
 cd fuel-qa8.0
+pip install -r fuelweb_test/requirements-devops-source.txt --upgrade
 
-pip install -r fuelweb_test/requirements.txt --upgrade
-
-bash -x ./utils/jenkins/system_tests.sh -t test -w $(pwd) -j fuelweb_test -i $ISO_PATH -k -K -o --group=upgrade_old_nodes
+bash -x ./utils/jenkins/system_tests.sh -N -w $(pwd) -j fuelweb_test -i $ISO_PATH -k -K -o --group=upgrade_old_nodes
 )
 
