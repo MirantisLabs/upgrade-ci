@@ -70,6 +70,6 @@ git_change_request https://github.com/openstack/fuel-qa stable/8.0 fuel-qa8.0 ${
 cd fuel-qa8.0
 pip install -r fuelweb_test/requirements-devops-source.txt --upgrade
 
-bash -x ./utils/jenkins/system_tests.sh -N -w $(pwd) -j fuelweb_test -i $ISO_PATH -k -K -o --group=upgrade_old_nodes
+bash -x ./utils/jenkins/system_tests.sh -N -w $(pwd) -j fuelweb_test -i $ISO_PATH -k -K -o --group=upgrade_cloud_no_live_migration
 )
 
