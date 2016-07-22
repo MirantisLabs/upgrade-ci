@@ -51,7 +51,7 @@ virtualenv ${VENV_PATH}
 
 rm -rf fuel-qa-mitaka
 # 332743 have bug?
-git_change_request https://github.com/openstack/fuel-qa stable/mitaka fuel-qa-mitaka
+git_change_request https://github.com/openstack/fuel-qa stable/mitaka fuel-qa-mitaka 345993 346027
 
 
 (
