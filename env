@@ -100,7 +100,7 @@ function get_9.x_mos_ubuntu_mirrors(){
         # a pointer to variable name which holds repo id
         __repo_id_ptr="MOS_UBUNTU_MIRROR_ID"
         __repo_url="http://${MIRROR_HOST}/mos-repos/ubuntu/snapshots/${!__repo_id_ptr}"
-        __repo_name="mos-${_dn},deb ${__repo_url} mos9.0-updates main restricted"
+        __repo_name="mos-${_dn},deb ${__repo_url} mos9.0-${_dn} main restricted"
         EXTRA_DEB_REPOS="$(join "${__pipe}" "${EXTRA_DEB_REPOS}" "${__repo_name}")"
     done
     echo $EXTRA_DEB_REPOS
