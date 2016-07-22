@@ -18,11 +18,9 @@ export ENV_NAME=backup_restore_9_NO_CLUSTER_${BUILD_ID}
 export LOGS_DIR=${BUILD_DIR}/logs
 export MAKE_SNAPSHOT=True
 
-export UPDATE_FUEL_MIRROR=$(get_9.x_fuel_mirrors)
-export EXTRA_DEB_REPOS=$(get_9.x_mos_ubuntu_mirrors)
 
 #export FUEL_PROPOSED_REPO_URL=${FUEL_PROPOSED_REPO_URL}
-export FUEL_PROPOSED_REPO_URL=http://perestroika-repo-tst.infra.mirantis.net/mos-repos/centos/mos9.0-centos7/os/x86_64/
+export FUEL_PROPOSED_REPO_URL=http://packages.fuel-infra.org//repositories/centos/mitaka-centos7/os/x86_64
 
 #. ${VENV_PATH}/bin/activate
 
@@ -31,6 +29,12 @@ test -d ${BUILD_DIR} || {
 }
 
 cd $BUILD_DIR
+curl https://product-ci.infra.mirantis.net/job/9.x.snapshot/lastSuccessfulBuild/artifact/snapshots.sh > 9.x_vars.sh
+cat 9.x_vars.sh
+. 9.x_vars.sh
+
+export UPDATE_FUEL_MIRROR=$(get_9.x_fuel_mirrors)
+export EXTRA_DEB_REPOS=$(get_9.x_mos_ubuntu_mirrors)
 
 
 export ADMIN_NODE_CPU=4
@@ -47,18 +51,16 @@ virtualenv ${VENV_PATH}
 
 rm -rf fuel-qa-mitaka
 # 332743 have bug?
-git_change_request https://github.com/openstack/fuel-qa stable/mitaka fuel-qa-mitaka  332743
+git_change_request https://github.com/openstack/fuel-qa stable/mitaka fuel-qa-mitaka
 
 
 (
 cd fuel-qa-mitaka
-fuel9_fix_devops_requirement | patch -p1
 pip install -r fuelweb_test/requirements.txt
 pip uninstall -y fuel-devops
 (
 git clone git://github.com/openstack/fuel-devops.git -b release/2.9
 cd fuel-devops
-cr_patch `pwd` 326462 327180 327656 331120
 pip install .
 )
 
