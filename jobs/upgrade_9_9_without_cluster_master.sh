@@ -18,6 +18,8 @@ export ENV_NAME=backup_restore_9_NO_CLUSTER_${BUILD_ID}
 export LOGS_DIR=${BUILD_DIR}/logs
 export MAKE_SNAPSHOT=True
 
+export UPDATE_FUEL_MIRROR=$(get_9.x_fuel_mirrors)
+export EXTRA_DEB_REPOS=$(get_9.x_mos_ubuntu_mirrors)
 
 #export FUEL_PROPOSED_REPO_URL=${FUEL_PROPOSED_REPO_URL}
 export FUEL_PROPOSED_REPO_URL=http://perestroika-repo-tst.infra.mirantis.net/mos-repos/centos/mos9.0-centos7/os/x86_64/
@@ -39,8 +41,6 @@ export SLAVE_NODE_MEMORY=4096
 export NODE_VOLUME_SIZE=40
 export ADMIN_NODE_VOLUME_SIZE=60
 export INTERFACE_MODEL=e1000
-
-
 rm -rf ${VENV_PATH}
 virtualenv ${VENV_PATH}
 . ${VENV_PATH}/bin/activate

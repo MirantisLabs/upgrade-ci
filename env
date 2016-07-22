@@ -45,6 +45,67 @@ index f842acc..46619c3 100644
 EOF
 }
 
+function join() {
+    local __sep="${1}"
+    local __head="${2}"
+    local __tail="${3}"
+
+    if [[ -n "${__head}" ]]; then
+        echo "${__head}${__sep}${__tail}"
+    else
+        echo "${__tail}"
+    fi
+}
+
+function to_uppercase() {
+    echo "$1" | awk '{print toupper($0)}'
+}
+
+__space=' '
+__pipe='|'
+
+
+# Adding MOS rpm repos to
+# - UPDATE_FUEL_MIRROR - will be used for master node
+# - EXTRA_RPM_REPOS - will be used for nodes in cluster
+function get_9.x_fuel_mirrors(){
+    MIRROR_HOST="mirror.seed-cz1.fuel-infra.org"
+    unset UPDATE_FUEL_MIRROR
+    for _dn in  "os"        \
+                "proposed"  \
+                "updates"   \
+                "holdback"  \
+                "hotfix"    \
+                "security"  ; do
+        # a pointer to variable name which holds value of enable flag for this dist name
+        # a pointer to variable name which holds repo id
+        __repo_id_ptr="MOS_CENTOS_$(to_uppercase "${_dn}")_MIRROR_ID"
+        __repo_url="http://${MIRROR_HOST}/mos-repos/centos/mos9.0-centos7/snapshots/${!__repo_id_ptr}/x86_64"
+        __repo_name="mos-${_dn},${__repo_url}"
+        UPDATE_FUEL_MIRROR="$(join "${__space}" "${UPDATE_FUEL_MIRROR}" "${__repo_url}" )"
+
+    done
+    echo $UPDATE_FUEL_MIRROR
+}
+
+function get_9.x_mos_ubuntu_mirrors(){
+    MIRROR_HOST="mirror.seed-cz1.fuel-infra.org"
+    unset EXTRA_DEB_REPOS
+    for _dn in  "proposed"  \
+                "updates"   \
+                "holdback"  \
+                "hotfix"    \
+                "security"  ; do
+        # a pointer to variable name which holds value of enable flag for this dist name
+        # a pointer to variable name which holds repo id
+        __repo_id_ptr="MOS_UBUNTU_MIRROR_ID"
+        __repo_url="http://${MIRROR_HOST}/mos-repos/ubuntu/snapshots/${!__repo_id_ptr}"
+        __repo_name="mos-${_dn},deb ${__repo_url} mos9.0-updates main restricted"
+        EXTRA_DEB_REPOS="$(join "${__pipe}" "${EXTRA_DEB_REPOS}" "${__repo_name}")"
+    done
+    echo $EXTRA_DEB_REPOS
+}
+
 
 export ALWAYS_CREATE_DIAGNOSTIC_SNAPSHOT=false
 export LOGS_DIR=${BUILD_DIR}/logs
