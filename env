@@ -75,7 +75,7 @@ function get_9.x_fuel_mirrors(){
                 "proposed"  \
                 "updates"   \
                 "holdback"  \
-                "hotfix"    \
+#                "hotfix"    \
                 "security"  ; do
         # a pointer to variable name which holds value of enable flag for this dist name
         # a pointer to variable name which holds repo id
@@ -94,7 +94,7 @@ function get_9.x_mos_ubuntu_mirrors(){
     for _dn in  "proposed"  \
                 "updates"   \
                 "holdback"  \
-                "hotfix"    \
+#                "hotfix"    \
                 "security"  ; do
         # a pointer to variable name which holds value of enable flag for this dist name
         # a pointer to variable name which holds repo id
