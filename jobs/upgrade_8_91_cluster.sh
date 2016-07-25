@@ -47,7 +47,11 @@ export OCTANE_PATCHES="$STABLE8_PATCHES"
 rm -rf fuel-qa8.0
 git_change_request https://github.com/openstack/fuel-qa stable/8.0 fuel-qa8.0  321611 ${FUEL_QA_STABLE8_PATCHES}
 cd fuel-qa8.0
-
+(
+git clone git://github.com/openstack/fuel-devops.git -b release/2.9
+cd fuel-devops
+pip install .
+)
 pip install -r fuelweb_test/requirements.txt --upgrade
 
 bash -x ./utils/jenkins/system_tests.sh -t test -w $(pwd) -j fuelweb_test -i $ISO_PATH -k -K -o --group=upgrade_smoke_backup
