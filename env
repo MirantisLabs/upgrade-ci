@@ -76,8 +76,6 @@ function get_9.x_fuel_mirrors(){
                 "updates"   \
                 "holdback"  \
                 "security"  ; do
-        # a pointer to variable name which holds value of enable flag for this dist name
-        # a pointer to variable name which holds repo id
         __repo_id_ptr="MOS_CENTOS_$(to_uppercase "${_dn}")_MIRROR_ID"
         __repo_url="http://${MIRROR_HOST}/mos-repos/centos/mos9.0-centos7/snapshots/${!__repo_id_ptr}/x86_64"
         __repo_name="mos-${_dn},${__repo_url}"
@@ -94,8 +92,6 @@ function get_9.x_mos_ubuntu_mirrors(){
                 "updates"   \
                 "holdback"  \
                 "security"  ; do
-        # a pointer to variable name which holds value of enable flag for this dist name
-        # a pointer to variable name which holds repo id
         __repo_id_ptr="MOS_UBUNTU_MIRROR_ID"
         __repo_url="http://${MIRROR_HOST}/mos-repos/ubuntu/snapshots/${!__repo_id_ptr}"
         __repo_name="mos-${_dn},deb ${__repo_url} mos9.0-${_dn} main restricted"
