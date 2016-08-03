@@ -48,10 +48,9 @@ rm -rf fuel-qa8.0
 git_change_request https://github.com/openstack/fuel-qa stable/8.0 fuel-qa8.0 ${FUEL_QA_STABLE8_PATCHES}
 cd fuel-qa8.0
 
-#pip install -r fuelweb_test/requirements.txt --upgrade
 pip install -r fuelweb_test/requirements-devops-source.txt --upgrade
 
-bash -x ./utils/jenkins/system_tests.sh -N -t test -w $(pwd) -j fuelweb_test -i $ISO_PATH -k -K -o --group=upgrade_no_cluster_backup
+bash -x ./utils/jenkins/system_tests.sh -N -w $(pwd) -j fuelweb_test -i $ISO_PATH -k -K -o --group=upgrade_no_cluster_backup
 
 )
 
@@ -61,6 +60,10 @@ unset OCTANE_PATCHES
 export OCTANE_PATCHES="$STABLE9_PATCHES"
 export FUEL_PROPOSED_REPO_URL="http://perestroika-repo-tst.infra.mirantis.net/mos-repos/centos/mos9.0-centos7/os/x86_64/"
 export ISO_PATH=${HOME}/iso/MirantisOpenStack-9.0.iso
+curl https://product-ci.infra.mirantis.net/job/9.x.snapshot/lastSuccessfulBuild/artifact/snapshots.sh > 9.x_vars.sh
+cat 9.x_vars.sh
+. 9.x_vars.sh
+
 rm -rf fuel-qa-mitaka
 git_change_request https://github.com/openstack/fuel-qa stable/mitaka fuel-qa-mitaka ${FUEL_QA_STABLE9_PATCHES}
 
@@ -69,5 +72,5 @@ git_change_request https://github.com/openstack/fuel-qa stable/mitaka fuel-qa-mi
 cd fuel-qa-mitaka
 pip install -r fuelweb_test/requirements-devops-source.txt --upgrade
 
-bash -x ./utils/jenkins/system_tests.sh -N -t test -w $(pwd) -j fuelweb_test -i $ISO_PATH -k -K -o --group=upgrade_no_cluster_backup -o --group=upgrade_no_cluster_tests
+bash -x ./utils/jenkins/system_tests.sh -N -w $(pwd) -j fuelweb_test -i $ISO_PATH -k -K -o --group=upgrade_no_cluster_backup -o --group=upgrade_no_cluster_tests
 )
