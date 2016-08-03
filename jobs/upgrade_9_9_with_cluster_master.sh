@@ -28,6 +28,13 @@ test -d ${BUILD_DIR} || {
 }
 
 cd $BUILD_DIR
+curl https://product-ci.infra.mirantis.net/job/9.x.snapshot/lastSuccessfulBuild/artifact/snapshots.sh > 9.x_vars.sh
+cat 9.x_vars.sh
+. 9.x_vars.sh
+
+export UPDATE_FUEL_MIRROR=$(get_9.x_fuel_mirrors)
+export EXTRA_DEB_REPOS=$(get_9.x_mos_ubuntu_mirrors)
+
 
 
 export ADMIN_NODE_CPU=4
@@ -45,14 +52,13 @@ virtualenv ${VENV_PATH}
 . ${VENV_PATH}/bin/activate
 
 rm -rf fuel-qa-mitaka
-git_change_request https://github.com/openstack/fuel-qa stable/mitaka fuel-qa-mitaka  
+git_change_request https://github.com/openstack/fuel-qa stable/mitaka fuel-qa-mitaka ${FUEL_QA_MITAKA_PATCHES}
 
 
 
 
 (
 cd fuel-qa-mitaka
-fuel9_fix_devops_requirement | patch -p1
 pip install -r fuelweb_test/requirements.txt
 pip uninstall -y fuel-devops
 (

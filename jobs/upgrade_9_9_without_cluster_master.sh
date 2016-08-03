@@ -19,11 +19,6 @@ export LOGS_DIR=${BUILD_DIR}/logs
 export MAKE_SNAPSHOT=True
 
 
-#export FUEL_PROPOSED_REPO_URL=${FUEL_PROPOSED_REPO_URL}
-export FUEL_PROPOSED_REPO_URL=http://packages.fuel-infra.org//repositories/centos/mitaka-centos7/os/x86_64
-
-#. ${VENV_PATH}/bin/activate
-
 test -d ${BUILD_DIR} || {
    mkdir ${BUILD_DIR}
 }
