@@ -51,7 +51,8 @@ virtualenv ${VENV_PATH}
 
 rm -rf fuel-qa-mitaka
 # 332743 have bug?
-git_change_request https://github.com/openstack/fuel-qa stable/mitaka fuel-qa-mitaka 345993 346027 346801
+git_change_request https://github.com/openstack/fuel-qa stable/mitaka fuel-qa-mitaka ${FUEL_QA_MITAKA_PATCHES}
+export OCTANE_PATCHES="$OCTANE_PATCHES"
 
 
 (
@@ -61,7 +62,6 @@ git clone git://github.com/openstack/fuel-devops.git -b release/2.9
 cd fuel-devops
 pip install .
 )
-
 
 bash -x ./utils/jenkins/system_tests.sh -t test -w $(pwd) -j fuelweb_test -i $ISO_PATH -k -K -o --group=upgrade_no_cluster_backup
 bash -x ./utils/jenkins/system_tests.sh -t test -w $(pwd) -j fuelweb_test -i $ISO_PATH -k -K -o --group=upgrade_no_cluster_tests
