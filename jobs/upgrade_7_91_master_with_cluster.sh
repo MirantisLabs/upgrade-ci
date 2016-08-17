@@ -41,7 +41,7 @@ export EXTRA_DEB_REPOS="mos-proposed,deb http://mirror.seed-cz1.fuel-infra.org/m
    rm -rf fuel-qa7.0
    git_change_request https://github.com/openstack/fuel-qa stable/7.0 fuel-qa7.0 ${FUEL_QA_STABLE7_PATCHES}
    cd fuel-qa7.0
-   pip install -r fuelweb_test/requirements.txt --upgrade
+   pip install -U -r fuelweb_test/requirements.txt
    # prepare the ceph_ha cluster
    bash -x ./utils/jenkins/system_tests.sh -w $(pwd) -j fuelweb_test -k -K -o --group=prepare_upgrade_ceph_ha_before_backup
    # do backup based on yaml file
@@ -62,9 +62,7 @@ export OCTANE_PATCHES="$STABLE8_PATCHES"
    rm -rf fuel-qa8.0
    git_change_request https://github.com/openstack/fuel-qa stable/8.0 fuel-qa8.0 ${FUEL_QA_STABLE8_PATCHES}
    cd fuel-qa8.0
-
-   pip install -r fuelweb_test/requirements.txt --upgrade
-
+   pip install -U -r fuelweb_test/requirements.txt
    # do restore 8.0
    bash -x ./utils/jenkins/system_tests.sh  -w $(pwd) -j fuelweb_test -k -K -o --group=upgrade_custom_restore
    # backup 8.0 data for next restore
@@ -89,8 +87,7 @@ export EXTRA_DEB_REPOS=$(get_9.x_mos_ubuntu_mirrors)
    rm -rf fuel-qa-mitaka
    git_change_request https://github.com/openstack/fuel-qa stable/mitaka fuel-qa-mitaka ${FUEL_QA_STABLE9_PATCHES}
    cd fuel-qa-mitaka
-
-   pip install -r fuelweb_test/requirements.txt --upgrade
-
+   pip install -U -r fuelweb_test/requirements.txt
+   
    bash -x ./utils/jenkins/system_tests.sh -w $(pwd) -j fuelweb_test -k -K -o --group=upgrade_ceph_ha_restore
 )
