@@ -41,7 +41,7 @@ export EXTRA_DEB_REPOS="mos-proposed,deb http://mirror.seed-cz1.fuel-infra.org/m
    rm -rf fuel-qa7.0
    git_change_request https://github.com/openstack/fuel-qa stable/7.0 fuel-qa7.0 ${FUEL_QA_STABLE7_PATCHES}
    cd fuel-qa7.0
-   pip install --upgrade -r fuelweb_tests/requirements.txt
+   pip install --upgrade -r fuelweb_test/requirements.txt
    # prepare the ceph_ha cluster
    bash -x ./utils/jenkins/system_tests.sh -w $(pwd) -j fuelweb_test -k -K -o --group=prepare_upgrade_ceph_ha_before_backup
    # do backup based on yaml file
