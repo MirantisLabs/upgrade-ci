@@ -8,97 +8,89 @@ JOB_MD5SUM=`echo ${JOB_NAME} | md5sum - | cut -d" " -f1`
 
 BUILD_DIR="${HOME}/workdir/${JOB_MD5SUM}-${BUILD_ID}"
 
-export UPGRADE_FUEL_FROM=7.0
-export UPGRADE_FUEL_TO=8.0
-
-export KEYSTONE_PASSWORD=admin1
-
-export UPDATE_FUEL_MIRROR="http://mirror.seed-cz1.fuel-infra.org/mos-repos/centos/mos7.0-centos6-fuel/proposed/x86_64/"
-export EXTRA_DEB_REPOS="mos-proposed,deb http://mirror.seed-cz1.fuel-infra.org/mos-repos/ubuntu/7.0 mos7.0-proposed main restricted"
-export UPDATE_MASTER=true
-
+# Vars related to whole job:
 export LOGS_DIR=${BUILD_DIR}/logs
-
-export ISO_PATH=${HOME}/iso/MirantisOpenStack-7.0.iso
-export NODES_COUNT=9
+export NODES_COUNT=10
 export ENV_NAME=upgrade_master_7_91_without_cluster_${BUILD_ID}
 export VENV_PATH=${BUILD_DIR}/fuel-qa-venv
-export FUEL_PROPOSED_REPO_URL="http://perestroika-repo-tst.infra.mirantis.net/mos-repos/centos/mos7.0-centos6-fuel/proposed/x86_64"
-export OCTANE_PATCHES="$STABLE7_PATCHES"
-export ALWAYS_CREATE_DIAGNOSTIC_SNAPSHOT=false
-export MAKE_SNAPSHOT=true
-
-
-
+export KEYSTONE_PASSWORD=admin1
+export UPGRADE_FUEL_FROM=7.0
+export UPGRADE_FUEL_TO=9.1
+export UPGRADE_BACKUP_FILES_LOCAL_DIR=${BUILD_DIR}/backup_files
+export UPGRADE_TEST_TEMPLATE=fuelweb_test/tests/tests_upgrade/example_upgrade_scenario.yaml
 
 cd ${BUILD_DIR} || mkdir ${BUILD_DIR}
 cd ${BUILD_DIR}
-
-
 
 rm -rf ${VENV_PATH}
 virtualenv ${VENV_PATH}
 . ${VENV_PATH}/bin/activate
 
+pip install git+https://github.com/openstack/fuel-devops@release/2.9
 
+# 7.0 related data:
+export FUEL_PROPOSED_REPO_URL=http://perestroika-repo-tst.infra.mirantis.net/mos-repos/centos/mos7.0-centos6-fuel/proposed/x86_64
+export OCTANE_PATCHES="$STABLE7_PATCHES"
+export UPDATE_MASTER=true
+export ISO_PATH=${HOME}/iso/MirantisOpenStack-7.0.iso
+export UPDATE_FUEL_MIRROR=http://mirror.seed-cz1.fuel-infra.org/mos-repos/centos/mos7.0-centos6-fuel/snapshots/proposed-latest/x86_64/
+export EXTRA_DEB_REPOS="mos-proposed,deb http://mirror.seed-cz1.fuel-infra.org/mos-repos/ubuntu/snapshots/7.0-latest mos7.0-proposed main restricted"
 
+# 7.0 actions:
 (
    rm -rf fuel-qa7.0
    git_change_request https://github.com/openstack/fuel-qa stable/7.0 fuel-qa7.0 ${FUEL_QA_STABLE7_PATCHES}
    cd fuel-qa7.0
-
-   pip install -r ./fuelweb_test/requirements.txt --upgrade
-   bash -x ./utils/jenkins/system_tests.sh -t test -w $(pwd) -j fuelweb_test -i $ISO_PATH -k -K -o --group=upgrade_smoke_backup
+   pip install --upgrade -r fuelweb_tests/requirements.txt
+   # prepare the ceph_ha cluster
+   bash -x ./utils/jenkins/system_tests.sh -w $(pwd) -j fuelweb_test -k -K -o --group=prepare_upgrade_ceph_ha_before_backup
+   # do backup based on yaml file
+   bash -x ./utils/jenkins/system_tests.sh -w $(pwd) -j fuelweb_test -k -K -o --group=upgrade_custom_backup
 )
 unset OCTANE_PATCHES
-
-(
-
-
-export UPDATE_FUEL_MIRROR="http://mirror.seed-cz1.fuel-infra.org/mos-repos/centos/mos8.0-centos7-fuel/proposed/x86_64/"
-export EXTRA_DEB_REPOS="mos-proposed,deb http://mirror.seed-cz1.fuel-infra.org/mos-repos/ubuntu/8.0 mos8.0-proposed main restricted"
+# end of 7.0 actions
 
 
+# 8.0 related data
 export ISO_PATH=${HOME}/iso/MirantisOpenStack-8.0.iso
+export UPDATE_FUEL_MIRROR=http://mirror.seed-cz1.fuel-infra.org/mos-repos/centos/mos8.0-centos7-fuel/snapshots/proposed-latest/x86_64/
+export EXTRA_DEB_REPOS='mos-proposed,deb http://mirror.seed-cz1.fuel-infra.org/mos-repos/ubuntu/snapshots/8.0-latest mos8.0-proposed main restricted'
 export FUEL_PROPOSED_REPO_URL="http://packages.fuel-infra.org/repositories/centos/liberty-centos7/proposed/x86_64/"
-export UPDATE_MASTER=true
 export OCTANE_PATCHES="$STABLE8_PATCHES"
+# 8.0 related actions
+(
+   rm -rf fuel-qa8.0
+   git_change_request https://github.com/openstack/fuel-qa stable/8.0 fuel-qa8.0 ${FUEL_QA_STABLE8_PATCHES}
+   cd fuel-qa8.0
 
+   pip install -r fuelweb_test/requirements.txt --upgrade
 
-rm -rf fuel-qa8.0
-git_change_request https://github.com/openstack/fuel-qa stable/8.0 fuel-qa8.0 ${FUEL_QA_STABLE8_PATCHES}
-cd fuel-qa8.0
-
-pip install -r fuelweb_test/requirements.txt --upgrade
-
-bash -x ./utils/jenkins/system_tests.sh -t test -w $(pwd) -j fuelweb_test -i $ISO_PATH -k -K -o --group=upgrade_smoke_restore -o --group=upgrade_smoke_backup
-
+   # do restore 8.0
+   bash -x ./utils/jenkins/system_tests.sh  -w $(pwd) -j fuelweb_test -k -K -o --group=upgrade_custom_restore
+   # backup 8.0 data for next restore
+   bash -x ./utils/jenkins/system_tests.sh  -w $(pwd) -j fuelweb_test -k -K -o --group=upgrade_custom_backup
 )
-
 unset OCTANE_PATCHES
+# end of 8.0 actions
 
+# 9.0 data
+export ISO_PATH=${HOME}/iso/MirantisOpenStack-9.0.iso
+# 9.x data
 export OCTANE_PATCHES="$STABLE9_PATCHES"
 export FUEL_PROPOSED_REPO_URL="http://perestroika-repo-tst.infra.mirantis.net/mos-repos/centos/mos9.0-centos7/os/x86_64/"
-export ISO_PATH=${HOME}/iso/MirantisOpenStack-9.0.iso
 curl https://product-ci.infra.mirantis.net/job/9.x.snapshot/lastSuccessfulBuild/artifact/snapshots.sh > 9.x_vars.sh
 cat 9.x_vars.sh
-. 9.x_vars.sh
+source 9.x_vars.sh
 
-rm -rf fuel-qa-mitaka
-git_change_request https://github.com/openstack/fuel-qa stable/mitaka fuel-qa-mitaka 332743 ${FUEL_QA_STABLE9_PATCHES}
-
+export UPDATE_FUEL_MIRROR=$(get_9.x_fuel_mirrors)
+export EXTRA_DEB_REPOS=$(get_9.x_mos_ubuntu_mirrors)
 
 (
-cd fuel-qa-mitaka
-fuel9_fix_devops_requirement | patch -p1
-pip install -r fuelweb_test/requirements.txt
-pip uninstall -y fuel-devops
-(
-git clone git://github.com/openstack/fuel-devops.git -b release/2.9
-cd fuel-devops
-pip install .
+   rm -rf fuel-qa-mitaka
+   git_change_request https://github.com/openstack/fuel-qa stable/mitaka fuel-qa-mitaka ${FUEL_QA_STABLE9_PATCHES}
+   cd fuel-qa-mitaka
+
+   pip install -r fuelweb_test/requirements.txt --upgrade
+
+   bash -x ./utils/jenkins/system_tests.sh -w $(pwd) -j fuelweb_test -k -K -o --group=upgrade_ceph_ha_restore
 )
-
-
-bash -x ./utils/jenkins/system_tests.sh -t test -w $(pwd) -j fuelweb_test -i $ISO_PATH -k -K -o --group=upgrade_smoke_scale -o --group=upgrade_smoke_new_deployment
-
