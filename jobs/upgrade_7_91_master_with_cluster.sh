@@ -45,6 +45,7 @@ export EXTRA_DEB_REPOS="mos-proposed,deb http://mirror.seed-cz1.fuel-infra.org/m
    # prepare the ceph_ha cluster
    bash -x ./utils/jenkins/system_tests.sh -w $(pwd) -j fuelweb_test -k -K -o --group=prepare_upgrade_ceph_ha_before_backup
    # do backup based on yaml file
+   export UPGRADE_CUSTOM_STEP_NAME=step_1
    bash -x ./utils/jenkins/system_tests.sh -w $(pwd) -j fuelweb_test -k -K -o --group=upgrade_custom_backup
 )
 unset OCTANE_PATCHES
@@ -64,8 +65,10 @@ export OCTANE_PATCHES="$STABLE8_PATCHES"
    cd fuel-qa8.0
    pip install -U -r fuelweb_test/requirements.txt
    # do restore 8.0
+   export UPGRADE_CUSTOM_STEP_NAME=step_2
    bash -x ./utils/jenkins/system_tests.sh  -w $(pwd) -j fuelweb_test -k -K -o --group=upgrade_custom_restore
    # backup 8.0 data for next restore
+   export UPGRADE_CUSTOM_STEP_NAME=step_3
    bash -x ./utils/jenkins/system_tests.sh  -w $(pwd) -j fuelweb_test -k -K -o --group=upgrade_custom_backup
 )
 unset OCTANE_PATCHES
