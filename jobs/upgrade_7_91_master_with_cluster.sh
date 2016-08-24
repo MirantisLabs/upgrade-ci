@@ -92,6 +92,5 @@ export EXTRA_DEB_REPOS=$(get_9.x_mos_ubuntu_mirrors)
    cd fuel-qa-mitaka
    pip install -U -r fuelweb_test/requirements.txt
    
-   bash -x ./utils/jenkins/system_tests.sh -w $(pwd) -j fuelweb_test -k -K -o --group=upgrade_ceph_ha_restore
-   bash -x ./utils/jenkins/system_tests.sh -w $(pwd) -j fuelweb_test -k -K -o --group=upgrade_cloud_live_migration
+   bash -x ./utils/jenkins/system_tests.sh -w $(pwd) -j fuelweb_test -k -K -o --group=${QA_STABLE9_TESTGROUP}
 )
