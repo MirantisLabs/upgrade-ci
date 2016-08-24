@@ -105,5 +105,5 @@ export ALWAYS_CREATE_DIAGNOSTIC_SNAPSHOT=false
 export LOGS_DIR=${BUILD_DIR}/logs
 export UPDATE_MASTER=true
 export MAKE_SNAPSHOT=true
-export FUELLOGS_TOOL=false
+export FUELLOGS_TOOL=no
 export UPDATE_REQUIREMENTS="yes"
