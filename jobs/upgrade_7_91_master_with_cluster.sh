@@ -39,7 +39,7 @@ export EXTRA_DEB_REPOS="mos-proposed,deb http://mirror.seed-cz1.fuel-infra.org/m
 # 7.0 actions:
 (
    rm -rf fuel-qa7.0
-   git_change_request https://github.com/openstack/fuel-qa stable/7.0 fuel-qa7.0 ${FUEL_QA_STABLE7_PATCHES}
+   git_change_request https://github.com/openstack/fuel-qa stable/7.0 fuel-qa7.0 ${QA_STABLE7_PATCHES}
    cd fuel-qa7.0
    pip install -U -r fuelweb_test/requirements.txt
    # prepare the ceph_ha cluster
@@ -61,7 +61,7 @@ export OCTANE_PATCHES="$STABLE8_PATCHES"
 # 8.0 related actions
 (
    rm -rf fuel-qa8.0
-   git_change_request https://github.com/openstack/fuel-qa stable/8.0 fuel-qa8.0 ${FUEL_QA_STABLE8_PATCHES}
+   git_change_request https://github.com/openstack/fuel-qa stable/8.0 fuel-qa8.0 ${QA_STABLE8_PATCHES}
    cd fuel-qa8.0
    pip install -U -r fuelweb_test/requirements.txt
    # do restore 8.0
@@ -88,7 +88,7 @@ export EXTRA_DEB_REPOS=$(get_9.x_mos_ubuntu_mirrors)
 
 (
    rm -rf fuel-qa-mitaka
-   git_change_request https://github.com/openstack/fuel-qa stable/mitaka fuel-qa-mitaka ${FUEL_QA_STABLE9_PATCHES}
+   git_change_request https://github.com/openstack/fuel-qa stable/mitaka fuel-qa-mitaka ${QA_STABLE9_PATCHES}
    cd fuel-qa-mitaka
    pip install -U -r fuelweb_test/requirements.txt
    
