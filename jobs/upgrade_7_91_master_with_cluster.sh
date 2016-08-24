@@ -11,7 +11,7 @@ BUILD_DIR="${HOME}/workdir/${JOB_MD5SUM}-${BUILD_ID}"
 # Vars related to whole job:
 export LOGS_DIR=${BUILD_DIR}/logs
 export NODES_COUNT=10
-export ENV_NAME=upgrade_master_7_91_without_cluster_${BUILD_ID}
+export ENV_NAME=upgrade_master_7_91_with_cluster_${BUILD_ID}
 export VENV_PATH=${BUILD_DIR}/fuel-qa-venv
 export KEYSTONE_PASSWORD=admin1
 export UPGRADE_FUEL_FROM=7.0
