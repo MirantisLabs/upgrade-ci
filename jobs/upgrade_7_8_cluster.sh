@@ -13,8 +13,8 @@ export UPGRADE_FUEL_TO=8.0
 
 export KEYSTONE_PASSWORD=admin1
 
-export UPDATE_FUEL_MIRROR="http://mirror.seed-cz1.fuel-infra.org/mos-repos/centos/mos7.0-centos6-fuel/proposed/x86_64/"
-export EXTRA_DEB_REPOS="mos-proposed,deb http://mirror.seed-cz1.fuel-infra.org/mos-repos/ubuntu/7.0 mos7.0-proposed main restricted"
+export UPDATE_FUEL_MIRROR="http://mirror.seed-cz1.fuel-infra.org/mos-repos/centos/mos7.0-centos6-fuel/snapshots/proposed-latest/"
+export EXTRA_DEB_REPOS="mos-proposed,deb http://mirror.seed-cz1.fuel-infra.org/mos-repos/ubuntu/snapshots/7.0-latest/ mos7.0-proposed main restricted"
 export UPDATE_MASTER=true
 
 export LOGS_DIR=${BUILD_DIR}/logs
@@ -55,8 +55,8 @@ unset OCTANE_PATCHES
 (
    
    
-export UPDATE_FUEL_MIRROR="http://mirror.seed-cz1.fuel-infra.org/mos-repos/centos/mos8.0-centos7-fuel/proposed/x86_64/"
-export EXTRA_DEB_REPOS="mos-proposed,deb http://mirror.seed-cz1.fuel-infra.org/mos-repos/ubuntu/8.0 mos8.0-proposed main restricted"
+export UPDATE_FUEL_MIRROR="http://mirror.seed-cz1.fuel-infra.org/mos-repos/centos/mos8.0-centos7-fuel/snapshots/proposed-latest/"
+export EXTRA_DEB_REPOS="mos-proposed,deb http://mirror.seed-cz1.fuel-infra.org/mos-repos/ubuntu/snapshots/8.0-latest/ mos8.0-proposed main restricted"
 
 
 export ISO_PATH=${HOME}/iso/MirantisOpenStack-8.0.iso
