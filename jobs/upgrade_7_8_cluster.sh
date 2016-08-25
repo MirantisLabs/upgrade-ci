@@ -50,7 +50,6 @@ virtualenv ${VENV_PATH}
    pip install -r fuelweb_test/requirements-devops-source.txt --upgrade
    bash -x ./utils/jenkins/system_tests.sh -N -w $(pwd) -j fuelweb_test -i $ISO_PATH -k -K -o --group=${FUEL_QA_STABLE7_TESTGROUP}
 )
-)
 unset OCTANE_PATCHES
 
 (
