@@ -37,7 +37,7 @@ export UPDATE_FUEL_MIRROR=http://mirror.seed-cz1.fuel-infra.org/mos-repos/centos
 export EXTRA_DEB_REPOS="mos-proposed,deb http://mirror.seed-cz1.fuel-infra.org/mos-repos/ubuntu/snapshots/7.0-latest mos7.0-proposed main restricted"
 
 # 7.0 actions:
-(
+dos.py snapshot-list $ENV_NAME | grep ceph_ha_octane_backup_7 || (
    rm -rf fuel-qa7.0
    git_change_request https://github.com/openstack/fuel-qa stable/7.0 fuel-qa7.0 ${QA_STABLE7_PATCHES}
    cd fuel-qa7.0
@@ -59,7 +59,7 @@ export EXTRA_DEB_REPOS='mos-proposed,deb http://mirror.seed-cz1.fuel-infra.org/m
 export FUEL_PROPOSED_REPO_URL="http://packages.fuel-infra.org/repositories/centos/liberty-centos7/proposed/x86_64/"
 export OCTANE_PATCHES="$STABLE8_PATCHES"
 # 8.0 related actions
-(
+dos.py snapshot-list $ENV_NAME | grep upgrade_ceph_ha_backup || (
    rm -rf fuel-qa8.0
    git_change_request https://github.com/openstack/fuel-qa stable/8.0 fuel-qa8.0 ${QA_STABLE8_PATCHES}
    cd fuel-qa8.0
