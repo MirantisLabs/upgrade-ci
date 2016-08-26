@@ -60,7 +60,7 @@ git_change_request https://github.com/openstack/fuel-qa stable/mitaka fuel-qa-mi
 (
 cd fuel-qa-mitaka
 pip install -r fuelweb_test/requirements.txt
-pip install git+https://github.com/openstack/fuel-devops@release/2.9
+pip install -r fuelweb_test/requirements-devops-source.txt
 #pip uninstall -y fuel-devops
 #(
 #git clone git://github.com/openstack/fuel-devops.git -b release/2.9
@@ -68,6 +68,6 @@ pip install git+https://github.com/openstack/fuel-devops@release/2.9
 #pip install .
 #)
 
-bash -x ./utils/jenkins/system_tests.sh -t test -w $(pwd) -V ${VENV_PATH} -j fuelweb_test -i $ISO_PATH -k -K -o --group=upgrade_smoke_backup -o --group=upgrade_smoke_scale -o --group=upgrade_smoke_new_deployment
+bash -x ./utils/jenkins/system_tests.sh -t test -w $(pwd) -j fuelweb_test -i $ISO_PATH -k -K -o --group=upgrade_smoke_backup -o --group=upgrade_smoke_scale -o --group=upgrade_smoke_new_deployment
 
 )
