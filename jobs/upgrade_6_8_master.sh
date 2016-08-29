@@ -112,6 +112,7 @@ git_change_request https://github.com/openstack/fuel-qa stable/7.0 fuel-qa7.0 ${
 cd fuel-qa7.0
 
 pip install -r fuelweb_test/requirements.txt
+pip install -r fuelweb_test/requirements-devops-source.txt
 
 export UPDATE_MASTER=true
 
@@ -145,6 +146,7 @@ git_change_request https://github.com/openstack/fuel-qa stable/8.0 fuel-qa8.0 ${
 cd fuel-qa8.0
 
 pip install -r fuelweb_test/requirements.txt
+pip install -r fuelweb_test/requirements-devops-source.txt
 
 
 bash -x ./utils/jenkins/system_tests.sh -t test -w $(pwd) -j fuelweb_test -i $ISO_PATH -k -K -o --group=upgrade_ceph_ha_restore -o --group=upgrade_old_nodes
