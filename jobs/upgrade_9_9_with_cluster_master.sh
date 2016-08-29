@@ -16,6 +16,9 @@ export ENV_NAME=backup_restore_9_${BUILD_ID}
 export LOGS_DIR=${BUILD_DIR}/logs
 export MAKE_SNAPSHOT=True
 
+export UPGRADE_FUEL_FROM=9.1
+export UPGRADE_FUEL_TO=9.1
+
 
 export FUEL_PROPOSED_REPO_URL=${FUEL_PROPOSED_REPO_URL}
 
