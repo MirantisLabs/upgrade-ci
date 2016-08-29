@@ -90,6 +90,7 @@ git_change_request https://github.com/openstack/fuel-qa stable/6.1 fuel-qa6.1 ${
 cd fuel-qa6.1
 
 pip install -r fuelweb_test/requirements.txt
+pip install -r fuelweb_test/requirements-devops-source.txt
 
 bash -x ./utils/jenkins/system_tests.sh -t test -w $(pwd) -j fuelweb_test -i $ISO_PATH -k -K -o --group=upgrade_ha_one_controller
 
