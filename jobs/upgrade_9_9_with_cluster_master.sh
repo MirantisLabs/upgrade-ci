@@ -58,5 +58,5 @@ cd fuel-qa-mitaka
 pip install -r fuelweb_test/requirements.txt
 pip install -r fuelweb_test/requirements-devops-source.txt
 
-bash -x ./utils/jenkins/system_tests.sh -t test -w $(pwd) -j fuelweb_test -i $ISO_PATH -k -K -o --group=upgrade_smoke_backup -o --group=upgrade_smoke_scale -o --group=upgrade_smoke_new_deployment
+bash -x ./utils/jenkins/system_tests.sh -w $(pwd) -j fuelweb_test -i $ISO_PATH -k -K -o --group=upgrade_smoke_backup -o --group=upgrade_smoke_scale -o --group=upgrade_smoke_new_deployment
 )
