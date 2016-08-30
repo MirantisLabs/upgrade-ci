@@ -100,6 +100,20 @@ function get_9.x_mos_ubuntu_mirrors(){
     echo $EXTRA_DEB_REPOS
 }
 
+download_file_by_magnet() {
+        
+        local MAGNET_LINK=$1
+        local WORKSPACE=$2
+        OUTPUT_FILE_PATH=`seedclient.py -d -m "${MAGNET_LINK}" --force-set-symlink -o "${WORKSPACE}" | tail -1`
+
+        test -z "${OUTPUT_FILE_PATH}" -o ! -e "${OUTPUT_FILE_PATH}" && {
+                echo "Download file $MAGNET_LINK failed" >> /dev/stderr
+                exit 1
+        }
+        echo $OUTPUT_FILE_PATH
+}
+
+
 
 export ALWAYS_CREATE_DIAGNOSTIC_SNAPSHOT=false
 export LOGS_DIR=${BUILD_DIR}/logs
