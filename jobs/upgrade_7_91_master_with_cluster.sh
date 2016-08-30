@@ -22,7 +22,7 @@ export UPGRADE_TEST_TEMPLATE=fuelweb_test/tests/tests_upgrade/example_upgrade_sc
 cd ${BUILD_DIR} || mkdir ${BUILD_DIR}
 cd ${BUILD_DIR}
 
-export ISO_PATH=$(download_file_by_magnet `magnet_map 7.0` $BUILD_DIR
+export ISO_PATH=$(download_file_by_magnet `magnet_map 7.0` $BUILD_DIR)
 
 rm -rf ${VENV_PATH}
 virtualenv ${VENV_PATH}
