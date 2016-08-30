@@ -34,7 +34,7 @@ pip install git+https://github.com/openstack/fuel-devops@release/2.9
 export FUEL_PROPOSED_REPO_URL=http://perestroika-repo-tst.infra.mirantis.net/mos-repos/centos/mos7.0-centos6-fuel/proposed/x86_64
 export OCTANE_PATCHES="$STABLE7_PATCHES"
 export UPDATE_MASTER=true
-)
+
 export UPDATE_FUEL_MIRROR=http://mirror.seed-cz1.fuel-infra.org/mos-repos/centos/mos7.0-centos6-fuel/snapshots/proposed-latest/x86_64/
 export EXTRA_DEB_REPOS="mos-proposed,deb http://mirror.seed-cz1.fuel-infra.org/mos-repos/ubuntu/snapshots/7.0-latest mos7.0-proposed main restricted"
 
