@@ -22,6 +22,8 @@ export UPGRADE_TEST_TEMPLATE=fuelweb_test/tests/tests_upgrade/example_upgrade_sc
 cd ${BUILD_DIR} || mkdir ${BUILD_DIR}
 cd ${BUILD_DIR}
 
+export ISO_PATH=$(download_file_by_magnet `magnet_map 7.0` $BUILD_DIR
+
 rm -rf ${VENV_PATH}
 virtualenv ${VENV_PATH}
 . ${VENV_PATH}/bin/activate
@@ -32,7 +34,7 @@ pip install git+https://github.com/openstack/fuel-devops@release/2.9
 export FUEL_PROPOSED_REPO_URL=http://perestroika-repo-tst.infra.mirantis.net/mos-repos/centos/mos7.0-centos6-fuel/proposed/x86_64
 export OCTANE_PATCHES="$STABLE7_PATCHES"
 export UPDATE_MASTER=true
-export ISO_PATH=$(download_file_by_magnet `magnet_map 7.0` $BUILD_DIR)
+)
 export UPDATE_FUEL_MIRROR=http://mirror.seed-cz1.fuel-infra.org/mos-repos/centos/mos7.0-centos6-fuel/snapshots/proposed-latest/x86_64/
 export EXTRA_DEB_REPOS="mos-proposed,deb http://mirror.seed-cz1.fuel-infra.org/mos-repos/ubuntu/snapshots/7.0-latest mos7.0-proposed main restricted"
 
@@ -53,7 +55,9 @@ unset OCTANE_PATCHES
 
 
 # 8.0 related data
+deactivate 
 export ISO_PATH=$(download_file_by_magnet `magnet_map 8.0` $BUILD_DIR)
+. ${VENV_PATH}/bin/activate
 export UPDATE_FUEL_MIRROR=http://mirror.seed-cz1.fuel-infra.org/mos-repos/centos/mos8.0-centos7-fuel/snapshots/proposed-latest/x86_64/
 export EXTRA_DEB_REPOS='mos-proposed,deb http://mirror.seed-cz1.fuel-infra.org/mos-repos/ubuntu/snapshots/8.0-latest mos8.0-proposed main restricted'
 export FUEL_PROPOSED_REPO_URL="http://packages.fuel-infra.org/repositories/centos/liberty-centos7/proposed/x86_64/"
@@ -74,8 +78,10 @@ dos.py snapshot-list $ENV_NAME | grep upgrade_ceph_ha_backup || (
 unset OCTANE_PATCHES
 # end of 8.0 actions
 
+deactivate
 # 9.0 data
 export ISO_PATH=$(download_file_by_magnet `magnet_map 9.0` $BUILD_DIR)
+. ${VENV_PATH}/bin/activate
 # 9.x data
 export OCTANE_PATCHES="$STABLE9_PATCHES"
 export FUEL_PROPOSED_REPO_URL="http://perestroika-repo-tst.infra.mirantis.net/mos-repos/centos/mos9.0-centos7/os/x86_64/"
