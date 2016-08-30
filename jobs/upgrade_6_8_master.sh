@@ -11,7 +11,7 @@ export MAKE_SNAPSHOT=true
 
 export VENV_PATH=${BUILD_DIR}/fuel-devops-venv-2.5/
 
-export ISO_PATH=${HOME}/iso/MirantisOpenStack-6.0.iso
+export ISO_PATH=$(download_file_by_magnet `magnet_map 6.0` $BUILD_DIR)
 export NODES_COUNT=12
 export ENV_NAME=upgrade_6_8_mos_${BUILD_ID}
 export LOGS_DIR=${BUILD_DIR}/logs
@@ -80,7 +80,7 @@ virtualenv ${VENV_PATH}
 export UPGRADE_FUEL_FROM=6.0
 export UPGRADE_FUEL_TO=6.1
 export TARBALL_PATH=${HOME}/iso/MirantisOpenStack-6.1-upgrade.tar.lrz
-export ISO_PATH=${HOME}/iso/MirantisOpenStack-6.1.iso
+export ISO_PATH=$(download_file_by_magnet `magnet_map 6.1` $BUILD_DIR)
 export OCTANE_PATCHES="${OCTANE_STABLE61_PATCHES}"	
 
 
@@ -104,7 +104,7 @@ echo "UPDATE devops_node SET role = CASE WHEN name LIKE 'slave%' THEN 'fuel_slav
 export UPGRADE_FUEL_FROM=6.1
 export UPGRADE_FUEL_TO=7.0
 export TARBALL_PATH=${HOME}/iso/MirantisOpenStack-7.0-upgrade.tar.lrz
-export ISO_PATH=${HOME}/iso/MirantisOpenStack-7.0.iso
+export ISO_PATH=$(download_file_by_magnet `magnet_map 7.0` $BUILD_DIR)
 export OCTANE_PATCHES="${OCTANE_STABLE7_PATCHES}"
 
 rm -rf fuel-qa7.0
@@ -136,7 +136,7 @@ virtualenv ${VENV_PATH}
 . ${VENV_PATH}/bin/activate
 
 (
-export ISO_PATH=${HOME}/iso/MirantisOpenStack-8.0.iso
+export ISO_PATH=$(download_file_by_magnet `magnet_map 8.0` $BUILD_DIR)
 export FUEL_PROPOSED_REPO_URL="http://packages.fuel-infra.org/repositories/centos/liberty-centos7/proposed/x86_64/"
 export UPDATE_MASTER=true
 export OCTANE_PATCHES="${OCTANE_STABLE8_PATCHES}"

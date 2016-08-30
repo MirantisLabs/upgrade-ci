@@ -10,7 +10,7 @@ export UPDATE_MASTER=true
 
 export VENV_PATH=${BUILD_DIR}/fuel-devops-venv
 
-export ISO_PATH=${HOME}/iso/MirantisOpenStack-9.0.iso
+export ISO_PATH=$(download_file_by_magnet `magnet_map 9.0` $BUILD_DIR)
 export NODES_COUNT=12
 export ENV_NAME=backup_restore_9_${BUILD_ID}
 export LOGS_DIR=${BUILD_DIR}/logs

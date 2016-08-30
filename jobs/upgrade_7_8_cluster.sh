@@ -19,7 +19,7 @@ export UPDATE_MASTER=true
 
 export LOGS_DIR=${BUILD_DIR}/logs
 
-export ISO_PATH=${HOME}/iso/MirantisOpenStack-7.0.iso
+export ISO_PATH=$(download_file_by_magnet `magnet_map 7.0` $BUILD_DIR)
 export NODES_COUNT=9
 export ENV_NAME=upgrade_MOS_7_8_${BUILD_ID}
 export VENV_PATH=${BUILD_DIR}/fuel-qa-venv
@@ -59,7 +59,7 @@ export UPDATE_FUEL_MIRROR="http://mirror.seed-cz1.fuel-infra.org/mos-repos/cento
 export EXTRA_DEB_REPOS="mos-proposed,deb http://mirror.seed-cz1.fuel-infra.org/mos-repos/ubuntu/snapshots/8.0-latest/ mos8.0-proposed main restricted"
 
 
-export ISO_PATH=${HOME}/iso/MirantisOpenStack-8.0.iso
+export ISO_PATH=$(download_file_by_magnet `magnet_map 8.0` $BUILD_DIR)
 export FUEL_PROPOSED_REPO_URL="http://packages.fuel-infra.org/repositories/centos/liberty-centos7/proposed/x86_64/"
 export UPDATE_MASTER=true
 export OCTANE_PATCHES="$STABLE8_PATCHES"

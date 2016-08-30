@@ -10,7 +10,7 @@ export LOGS_DIR=${HOME}/logs
 export KEYSTONE_PASSWORD=admin1
 export UPDATE_MASTER=true
 
-export ISO_PATH=${HOME}/iso/MirantisOpenStack-6.1.iso
+export ISO_PATH=$(download_file_by_magnet `magnet_map 6.1` $BUILD_DIR)
 export NODES_COUNT=12
 export ENV_NAME=upgrade_61_8_${BUILD_ID}
 export LOGS_DIR=${BUILD_DIR}/logs
@@ -46,7 +46,7 @@ virtualenv ${VENV_PATH}
 
 export UPGRADE_FUEL_TO=6.1
 export TARBALL_PATH=${HOME}/iso/MirantisOpenStack-7.0-upgrade.tar.lrz
-export ISO_PATH=${HOME}/iso/MirantisOpenStack-6.1.iso
+export ISO_PATH=$(download_file_by_magnet `magnet_map 6.1` $BUILD_DIR)
 
 rm -rf fuel-qa6.1
 git_change_request https://github.com/openstack/fuel-qa stable/6.1 fuel-qa6.1 331714
@@ -76,7 +76,7 @@ virtualenv ${VENV_PATH}
 export UPGRADE_FUEL_FROM=6.1
 export UPGRADE_FUEL_TO=7.0
 export TARBALL_PATH=${HOME}/iso/MirantisOpenStack-7.0-upgrade.tar.lrz
-export ISO_PATH=${HOME}/iso/MirantisOpenStack-7.0.iso
+export ISO_PATH=$(download_file_by_magnet `magnet_map 7.0` $BUILD_DIR)
 
 rm -rf fuel-qa7.0
 git_change_request https://github.com/openstack/fuel-qa stable/7.0 fuel-qa7.0
@@ -111,7 +111,7 @@ virtualenv ${VENV_PATH}
 . ${VENV_PATH}/bin/activate
 
 (
-export ISO_PATH=${HOME}/iso/MirantisOpenStack-8.0.iso
+export ISO_PATH=$(download_file_by_magnet `magnet_map 8.0` $BUILD_DIR)
 export FUEL_PROPOSED_REPO_URL="http://perestroika-repo-tst.infra.mirantis.net/mos-repos/centos/mos8.0-centos7-fuel/proposed/x86_64/"
 export UPDATE_MASTER=true
 
