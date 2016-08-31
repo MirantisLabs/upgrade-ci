@@ -100,6 +100,47 @@ function get_9.x_mos_ubuntu_mirrors(){
     echo $EXTRA_DEB_REPOS
 }
 
+function set_MU_proposed_repos(){
+    # hard-coding URLs (along with long lines) is evil, so split them
+    # MIRROR_HOST is injected (comes from guess-mirror macros)
+    REPO="mos-proposed,deb"
+    MIRROR_HOST=${MIRROR_HOST:-mirror.seed-cz1.fuel-infra.org}
+
+    unset UPDATE_FUEL_MIRROR
+    unset EXTRA_DEB_REPOS
+
+    FUEL_PROPOSED_7="mos-repos/centos/mos7.0-centos6-fuel/snapshots/proposed-latest/x86_64/"
+    FUEL_PROPOSED_8="mos-repos/centos/mos8.0-centos7-fuel/snapshots/proposed-latest/x86_64/"
+
+    MOS_EXTRA_DEB_7="mos-repos/ubuntu/snapshots/7.0-latest mos7.0-proposed main restricted"
+    MOS_EXTRA_DEB_8="mos-repos/ubuntu/snapshots/8.0-latest mos8.0-proposed main restricted"
+
+    # form MU repo URLs both for base and upgrade releases
+    # there's no need to apply MOS updates beforehand, 'cause
+    # according to Fuel QA routine, they are always applied
+    export UPDATE_FUEL_MIRROR
+    export EXTRA_DEB_REPOS
+    export UPDATE_MASTER
+
+    if [[ "${1}" = "7.0" ]]; then
+      UPDATE_FUEL_MIRROR="http://${MIRROR_HOST}/${FUEL_PROPOSED_7}"
+      EXTRA_DEB_REPOS="${REPO} http://${MIRROR_HOST}/${MOS_EXTRA_DEB_7}"
+    elif [[ "${1}" = "8.0" ]]; then
+      UPDATE_FUEL_MIRROR="http://${MIRROR_HOST}/${FUEL_PROPOSED_8}"
+      EXTRA_DEB_REPOS="${REPO} http://${MIRROR_HOST}/${MOS_EXTRA_DEB_8}"
+    elif [[ "${1}" = "9.0" || "${1}" = "9.1" || "${1}" = "9.x" ]]; then
+      # todo: use existing converter file
+      curl https://raw.githubusercontent.com/openstack/fuel-qa/stable/mitaka/utils/jenkins/conv_snapshot_file.py > "${BUILD_DIR}/conv_snapshot_file.py"
+      export SNAPSHOT_ARTIFACTS_FILE="${BUILD_DIR}/snapshots.params"
+      curl https://product-ci.infra.mirantis.net/job/9.x.snapshot/lastSuccessfulBuild/artifact/snapshots.params > "${SNAPSHOT_ARTIFACTS_FILE}"
+      export SNAPSHOT_OUTPUT_FILE="${BUILD_DIR}/9.x_vars.sh"
+      python "${BUILD_DIR}/conv_snapshot_file.py"
+      source ${SNAPSHOT_OUTPUT_FILE}
+    fi
+
+}
+
+
 download_file_by_magnet() {
         
         local MAGNET_LINK=$1
