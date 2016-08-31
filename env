@@ -145,7 +145,7 @@ download_file_by_magnet() {
         
         local MAGNET_LINK=$1
         local WORKSPACE=$2
-        OLD_VIRTUAL_ENV=""
+        local OLD_VIRTUAL_ENV=""
         test -n "$VIRTUAL_ENV" && {
              OLD_VIRTUAL_ENV="${VIRTUAL_ENV}"
              deactivate
