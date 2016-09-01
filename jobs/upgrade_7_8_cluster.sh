@@ -7,6 +7,8 @@ JOB_MD5SUM=`echo ${JOB_NAME} | md5sum - | cut -d" " -f1`
 
 
 BUILD_DIR="${HOME}/workdir/${JOB_MD5SUM}-${BUILD_ID}"
+cd ${BUILD_DIR} || mkdir ${BUILD_DIR}
+cd ${BUILD_DIR}
 
 export UPGRADE_FUEL_FROM=7.0
 export UPGRADE_FUEL_TO=8.0
@@ -27,12 +29,6 @@ export FUEL_PROPOSED_REPO_URL="http://perestroika-repo-tst.infra.mirantis.net/mo
 export OCTANE_PATCHES="$STABLE7_PATCHES"
 export ALWAYS_CREATE_DIAGNOSTIC_SNAPSHOT=false
 export MAKE_SNAPSHOT=true
-
-
-
-
-cd ${BUILD_DIR} || mkdir ${BUILD_DIR}
-cd ${BUILD_DIR}
 
 
 
