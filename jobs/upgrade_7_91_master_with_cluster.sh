@@ -85,6 +85,8 @@ export ISO_PATH=$(download_file_by_magnet `magnet_map 9.0` $BUILD_DIR)
 # 9.x data
 export OCTANE_PATCHES="$OCTANE_STABLE9_PATCHES"
 export FUEL_PROPOSED_REPO_URL="http://perestroika-repo-tst.infra.mirantis.net/mos-repos/centos/mos9.0-centos7/os/x86_64/"
+# REWRITE! infra-team hello!
+export FUEL_PROPOSED_REPO_URL="http://packages.fuel-infra.org/repositories/centos/mitaka-centos7/os/x86_64/Packages/"
 curl https://product-ci.infra.mirantis.net/job/9.x.snapshot/lastSuccessfulBuild/artifact/snapshots.sh > 9.x_vars.sh
 cat 9.x_vars.sh
 source 9.x_vars.sh
