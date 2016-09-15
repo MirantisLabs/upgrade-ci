@@ -60,9 +60,15 @@ unset OCTANE_PATCHES
 export OCTANE_PATCHES="$STABLE9_PATCHES"
 export FUEL_PROPOSED_REPO_URL="http://perestroika-repo-tst.infra.mirantis.net/mos-repos/centos/mos9.0-centos7/os/x86_64/"
 export ISO_PATH=$(download_file_by_magnet `magnet_map 9.0` $BUILD_DIR)
+
 curl https://product-ci.infra.mirantis.net/job/9.x.snapshot/lastSuccessfulBuild/artifact/snapshots.sh > 9.x_vars.sh
 cat 9.x_vars.sh
-. 9.x_vars.sh
+source 9.x_vars.sh
+
+export UPDATE_FUEL_MIRROR=$(get_9.x_fuel_mirrors)
+export EXTRA_DEB_REPOS=$(get_9.x_mos_ubuntu_mirrors)
+
+
 
 rm -rf fuel-qa-mitaka
 git_change_request https://github.com/openstack/fuel-qa stable/mitaka fuel-qa-mitaka ${FUEL_QA_STABLE9_PATCHES}
