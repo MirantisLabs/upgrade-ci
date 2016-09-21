@@ -10,7 +10,6 @@ export LOGS_DIR=${HOME}/logs
 export KEYSTONE_PASSWORD=admin1
 export UPDATE_MASTER=true
 
-export ISO_PATH=$(download_file_by_magnet `magnet_map 6.1` $BUILD_DIR)
 export NODES_COUNT=12
 export ENV_NAME=upgrade_61_8_${BUILD_ID}
 export LOGS_DIR=${BUILD_DIR}/logs
@@ -21,6 +20,8 @@ export LOGS_DIR=${BUILD_DIR}/logs
 test -d ${BUILD_DIR} || {
    mkdir ${BUILD_DIR}
 }
+
+export ISO_PATH=$(download_file_by_magnet `magnet_map 6.1` $BUILD_DIR)
 
 cd $BUILD_DIR
 
