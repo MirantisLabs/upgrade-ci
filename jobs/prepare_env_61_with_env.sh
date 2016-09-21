@@ -50,7 +50,7 @@ rm -rf fuel-qa6.1
 git_change_request https://github.com/openstack/fuel-qa stable/6.1 fuel-qa6.1 331714
 cd fuel-qa6.1
 
-
+pip install -r fuelweb_test/requirements-devops-source.txt
 pip install -r fuelweb_test/requirements.txt
 
 
