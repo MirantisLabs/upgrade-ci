@@ -1,0 +1,16 @@
+[Unit]
+Description=Jenkins Slave
+Requires=network.target
+After=multi-user.target
+
+[Service]
+Type=simple
+WorkingDirectory={{ home }}
+ExecStart=/usr/bin/java -jar {{ jar_path }} -executors {{ executors }} -master {{ master_url }} -fsroot {{ home }} -mode {{ mode }} -disableClientsUniqueId
+Restart=always
+RestartSec=60
+StartLimitInterval=0
+User={{ user }}
+
+[Install]
+WantedBy=multi-user.target

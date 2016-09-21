@@ -1,0 +1,135 @@
+- hosts: all
+  user: ubuntu
+  become: true
+  gather_facts: false
+
+  vars:
+    user: jenkins
+    home: /home/jenkins
+    jar_path: /usr/bin/swarm-client.jar
+    fuel_devops: /home/jenkins/fuel-devops
+    executors: 2
+    master_url: http://172.18.167.135:8080/
+    mode: exclusive
+
+  tasks:
+    - name: Install required python2
+      raw: apt-get install python2.7 -y
+
+    - name: Use python2 as default
+      raw: update-alternatives --install /usr/bin/python python /usr/bin/python2.7 100
+
+    - name: Enable gathering facts
+      setup:
+
+    - name: Update /etc/sudoers
+      lineinfile: "dest=/etc/sudoers state=present regexp='^%sudo' line='%sudo ALL=(ALL) NOPASSWD: ALL'"
+
+    - name: Install lvm2 packages
+      apt: name=lvm2
+
+    - name: Install required packages
+      apt: name={{item}} state=installed
+      with_items:
+        - wget
+        - curl
+        - dstat
+        - htop
+        - telnet
+        - tmux
+        - mc
+        - tcpdump
+        - ca-certificates
+        - git
+        - postgresql
+        - postgresql-server-dev-all
+        - libyaml-dev
+        - libffi-dev
+        - python-dev
+        - python-libtorrent        
+        - python-libvirt
+        - python-pip
+        - python-psycopg2
+        - python-requests
+        - python-transmissionrpc
+        - python-virtualenv
+        - libpq-dev
+        - libgmp-dev
+        - qemu-kvm
+        - qemu-utils
+        - transmission-daemon
+        - libvirt-bin
+        - libvirt-dev
+        - ubuntu-vm-builder
+        - bridge-utils
+        - openjdk-8-jre
+
+    - name: Install python-seed-client
+      apt: deb=http://mirror.fuel-infra.org/devops/ubuntu/all/python-seed-client_0.17-ubuntu55_all.deb
+
+    - name: Configure postgresql
+      replace: dest=/etc/postgresql/9.5/main/pg_hba.conf regexp='(\s+)peer$' replace='\1trust'
+      register: pgsq_conf
+
+    - name: Restart postgresql
+      service: name=postgresql state=restarted
+      when: pgsq_conf.changed
+
+    - name: Create fuel_devops database
+      postgresql_db: name=fuel_devops
+
+    - name: Create fuel_devops user
+      postgresql_user: name=fuel_devops password=fuel_devops role_attr_flags=LOGIN db=fuel_devops
+
+    - name: Install fuel-devops in virtualenv
+      pip: name='https://github.com/openstack/fuel-devops/archive/release/2.9.zip' virtualenv={{ fuel_devops }} virtualenv_site_packages=yes
+      register: fuel_devops_installed
+
+    - name: Create fuel-devops database scheme
+      shell: . "{{ fuel_devops }}"/bin/activate && django-admin.py syncdb --settings=devops.settings && django-admin.py migrate devops --settings=devops.settings && touch "{{ fuel_devops }}/db_populated.lock"
+      args:
+        creates: "{{ fuel_devops }}/db_populated.lock"
+
+    - name: Test storage pool existance
+      command: virsh pool-list --all
+      register: storage_check
+      changed_when: false    
+
+    - name: Create default storage pool
+      command: virsh pool-define-as --type=dir --name=default --target=/var/lib/libvirt/images
+      when: "'default' not in storage_check.stdout" 
+      register: storage_create
+
+    - name: Test pool settings
+      command: virsh pool-info default
+      when: storage_create|success
+      register: pool_settings      
+      changed_when: false
+
+    - name: Set default storage pool to autostart
+      command: virsh pool-autostart default
+      when: "'Autostart:      yes' not in pool_settings.stdout"
+
+    - name: Start default storage pool
+      command: virsh pool-start default
+      when: "'State:          running' not in pool_settings.stdout"
+
+    - name: Add jenkins user
+      user: name=jenkins shell=/bin/bash groups=libvirtd append=yes
+
+    - name: Download jenkins swarm client
+      get_url: 
+        url: https://repo.jenkins-ci.org/releases/org/jenkins-ci/plugins/swarm-client/2.2/swarm-client-2.2-jar-with-dependencies.jar
+        dest: "{{ jar_path }}"
+
+    - name: Create jenkins-slave service
+      template: src=jenkins-slave.j2 dest=/etc/systemd/system/jenkins-slave.service
+      register: js_service
+
+    - name: Enable jenkins-slave service
+      command: systemctl enable jenkins-slave
+      when: js_service.changed
+
+    - name: Start jenkins-slave service
+      service: name=jenkins-slave state=restarted
+      when: js_service.changed
