@@ -1,5 +1,3 @@
-. ${HOME}/.bash_profile
-
 BUILD_ID=${CUSTOM_BUILD_ID:-${BUILD_ID}}
 
 JOB_MD5SUM=`echo "${JOB_NAME}" | md5sum - | cut -d" " -f1`
