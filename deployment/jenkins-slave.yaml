@@ -1,44 +1,71 @@
 - hosts: all
   user: ubuntu
   become: true
-  gather_facts: false
 
   vars:
     user: jenkins
     home: /home/jenkins
     jar_path: /usr/bin/swarm-client.jar
+    locks_path: /home/ubuntu/.ansible
     fuel_devops: /home/jenkins/fuel-devops
     executors: 2
     master_url: http://172.18.167.135:8080/
     mode: exclusive
 
   tasks:
-    - name: Install required python2
-      raw: apt-get install python2.7 -y
-
-    - name: Use python2 as default
-      raw: update-alternatives --install /usr/bin/python python /usr/bin/python2.7 100
-
-    - name: Enable gathering facts
-      setup:
-
     - name: Update /etc/sudoers
       lineinfile: "dest=/etc/sudoers state=present regexp='^%sudo' line='%sudo ALL=(ALL) NOPASSWD: ALL'"
 
-    - name: Install lvm2 packages
-      apt: name=lvm2
+    - name: Install lvm2 and parted packages
+      apt: name={{item}} state=installed
+      with_items:
+        - lvm2
+        - parted
+        - xfsprogs
+
+    - name: Clear all old LVM volume groups
+      shell: vgscan && vgs=$(vgs --no-h | awk '{print $1}') && for vg in $vgs; do vgremove $vg --force; done && touch "{{locks_path}}/lvm-vgs-cleared.lock"
+      args:
+        creates: "{{locks_path}}/lvm-vgs-cleared.lock"
+
+    - name: Clear all old LVM physical volumes
+      shell: pvscan && pvs=$(pvs --no-h | awk '{print $1}') && for pv in $pvs; do pvremove $pv --force; done && touch "{{locks_path}}/lvm-pvs-cleared.lock"
+      args:
+        creates: "{{locks_path}}/lvm-pvs-cleared.lock"
+
+    - name: Clear /dev/sd{b,c} disk layout
+      shell: dd if=/dev/zero of=/dev/{{item}} bs=512 count=1000 && touch "{{locks_path}}/{{item}}-cleared.lock"
+      with_items:
+        - sdb
+        - sdc
+      args:
+        creates: "{{locks_path}}/{{item}}-cleared.lock"
+
+    - name: Create primary partitions on /dev/sd{b,c}
+      shell: parted -s "/dev/{{item}}" mklabel GPT && parted -s "/dev/{{item}}" mkpart primary 1M 100% && parted -s "/dev/{{item}}" set 1 lvm on && touch "{{locks_path}}/{{item}}-partitioned.lock"
+      with_items:
+        - sdb
+        - sdc
+      args:
+        creates: "{{locks_path}}/{{item}}-partitioned.lock"
+
+    - name: Create LVM resources
+      script: lvm-provision.sh "{{locks_path}}/lvm-provisioned.lock"
+      args:
+        creates: /dev/mapper/vms-images
+      register: lvm_provisioned
+
+    - name: Create XFS filesystem on /dev/mapper/vms-images
+      filesystem: fstype=xfs dev=/dev/mapper/vms-images
+      register: fs_ready
+
+    - name: Update /etc/fstab and mount /var/lib/libvirt/images
+      mount: name=/var/lib/libvirt/images src=/dev/mapper/vms-images fstype=xfs opts=noatime state=mounted
+      when: fs_ready|success
 
     - name: Install required packages
       apt: name={{item}} state=installed
       with_items:
-        - wget
-        - curl
-        - dstat
-        - htop
-        - telnet
-        - tmux
-        - mc
-        - tcpdump
         - ca-certificates
         - git
         - postgresql
@@ -46,7 +73,7 @@
         - libyaml-dev
         - libffi-dev
         - python-dev
-        - python-libtorrent        
+        - python-libtorrent
         - python-libvirt
         - python-pip
         - python-psycopg2
@@ -93,17 +120,17 @@
     - name: Test storage pool existance
       command: virsh pool-list --all
       register: storage_check
-      changed_when: false    
+      changed_when: false
 
     - name: Create default storage pool
       command: virsh pool-define-as --type=dir --name=default --target=/var/lib/libvirt/images
-      when: "'default' not in storage_check.stdout" 
+      when: "'default' not in storage_check.stdout"
       register: storage_create
 
     - name: Test pool settings
       command: virsh pool-info default
       when: storage_create|success
-      register: pool_settings      
+      register: pool_settings
       changed_when: false
 
     - name: Set default storage pool to autostart
@@ -131,5 +158,4 @@
       when: js_service.changed
 
     - name: Start jenkins-slave service
-      service: name=jenkins-slave state=restarted
-      when: js_service.changed
+      service: name=jenkins-slave state=started
