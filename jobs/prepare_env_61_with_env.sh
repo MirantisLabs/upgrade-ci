@@ -41,11 +41,6 @@ rm -rf ${VENV_PATH}
 virtualenv ${VENV_PATH}
 . ${VENV_PATH}/bin/activate
 
-
-
-
-export UPGRADE_FUEL_TO=6.1
-export TARBALL_PATH=${HOME}/iso/MirantisOpenStack-7.0-upgrade.tar.lrz
 export ISO_PATH=$(download_file_by_magnet `magnet_map 6.1` $BUILD_DIR)
 
 rm -rf fuel-qa6.1
