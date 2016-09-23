@@ -1,5 +1,3 @@
-. ${HOME}/.bash_profile
-
 BUILD_ID=${CUSTOM_BUILD_ID:-${BUILD_ID}}
 
 JOB_MD5SUM=`echo "${JOB_NAME}" | md5sum - | cut -d" " -f1`
@@ -47,7 +45,7 @@ rm -rf fuel-qa6.1
 git_change_request https://github.com/openstack/fuel-qa stable/6.1 fuel-qa6.1 331714
 cd fuel-qa6.1
 
-
+pip install -r fuelweb_test/requirements-devops-source.txt
 pip install -r fuelweb_test/requirements.txt
 
 
