@@ -16,13 +16,6 @@
     - name: Update /etc/sudoers
       lineinfile: "dest=/etc/sudoers state=present regexp='^%sudo' line='%sudo ALL=(ALL) NOPASSWD: ALL'"
 
-    - name: Install lvm2 and parted packages
-      apt: name={{item}} state=installed
-      with_items:
-        - lvm2
-        - parted
-        - xfsprogs
-
     - name: Clear all old LVM volume groups
       shell: vgscan && vgs=$(vgs --no-h | awk '{print $1}') && for vg in $vgs; do vgremove $vg --force; done && touch "{{locks_path}}/lvm-vgs-cleared.lock"
       args:
@@ -34,20 +27,12 @@
         creates: "{{locks_path}}/lvm-pvs-cleared.lock"
 
     - name: Clear /dev/sd{b,c} disk layout
-      shell: dd if=/dev/zero of=/dev/{{item}} bs=512 count=1000 && touch "{{locks_path}}/{{item}}-cleared.lock"
+      shell: dd if=/dev/zero of=/dev/{{item}} bs=512 count=63 && touch "{{locks_path}}/{{item}}-cleared.lock"
       with_items:
         - sdb
         - sdc
       args:
         creates: "{{locks_path}}/{{item}}-cleared.lock"
-
-    - name: Create primary partitions on /dev/sd{b,c}
-      shell: parted -s "/dev/{{item}}" mklabel GPT && parted -s "/dev/{{item}}" mkpart primary 1M 100% && parted -s "/dev/{{item}}" set 1 lvm on && touch "{{locks_path}}/{{item}}-partitioned.lock"
-      with_items:
-        - sdb
-        - sdc
-      args:
-        creates: "{{locks_path}}/{{item}}-partitioned.lock"
 
     - name: Create LVM resources
       script: lvm-provision.sh "{{locks_path}}/lvm-provisioned.lock"
