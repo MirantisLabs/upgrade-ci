@@ -11,7 +11,7 @@ export MAKE_SNAPSHOT=true
 
 export VENV_PATH=${BUILD_DIR}/fuel-devops-venv-2.5/
 
-export ISO_PATH=$(download_file_by_magnet `magnet_map 6.0` $BUILD_DIR)
+
 export NODES_COUNT=12
 export ENV_NAME=upgrade_6_8_mos_${BUILD_ID}
 export LOGS_DIR=${BUILD_DIR}/logs
@@ -24,6 +24,7 @@ test -d ${BUILD_DIR} || {
 }
 
 cd $BUILD_DIR
+export ISO_PATH=$(download_file_by_magnet `magnet_map 6.0` $BUILD_DIR)
 
 
 export ADMIN_NODE_CPU=4
