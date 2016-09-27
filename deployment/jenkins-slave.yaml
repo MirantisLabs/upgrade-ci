@@ -28,9 +28,6 @@
         - "  dns-search {% for search in ansible_dns.search %}{{ search }} {% endfor %}"
         - "  dns-nameservers {% for nameserver in ansible_dns.nameservers %}{{ nameserver }} {% endfor %}"
 
-    - name: Update /etc/sudoers
-      lineinfile: "dest=/etc/sudoers state=present regexp='^%sudo' line='%sudo ALL=(ALL) NOPASSWD: ALL'"
-
     - name: Clear all old LVM volume groups
       shell: vgscan && vgs=$(vgs --no-h | awk '{print $1}') && for vg in $vgs; do vgremove $vg --force; done && touch "{{ locks_path }}/lvm-vgs-cleared.lock"
       args:
