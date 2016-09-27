@@ -13,29 +13,44 @@
     mode: exclusive
 
   tasks:
+    - name: Switch network configuration to static on enp2s0f0 interface
+      replace: dest=/etc/network/interfaces regexp="iface enp2s0f0 inet dhcp" replace="iface enp2s0f0 inet static"
+
+    - name: Configure static network address based on current dhcp address
+      lineinfile:
+        dest: /etc/network/interfaces
+        state: present
+        line: "{{ item }}"
+      with_items:
+        - "  address {{ ansible_default_ipv4.address }}"
+        - "  netmask {{ ansible_default_ipv4.netmask }}"
+        - "  gateway {{ ansible_default_ipv4.gateway }}"
+        - "  dns-search {% for search in ansible_dns.search %}{{ search }} {% endfor %}"
+        - "  dns-nameservers {% for nameserver in ansible_dns.nameservers %}{{ nameserver }} {% endfor %}"
+
     - name: Update /etc/sudoers
       lineinfile: "dest=/etc/sudoers state=present regexp='^%sudo' line='%sudo ALL=(ALL) NOPASSWD: ALL'"
 
     - name: Clear all old LVM volume groups
-      shell: vgscan && vgs=$(vgs --no-h | awk '{print $1}') && for vg in $vgs; do vgremove $vg --force; done && touch "{{locks_path}}/lvm-vgs-cleared.lock"
+      shell: vgscan && vgs=$(vgs --no-h | awk '{print $1}') && for vg in $vgs; do vgremove $vg --force; done && touch "{{ locks_path }}/lvm-vgs-cleared.lock"
       args:
-        creates: "{{locks_path}}/lvm-vgs-cleared.lock"
+        creates: "{{ locks_path }}/lvm-vgs-cleared.lock"
 
     - name: Clear all old LVM physical volumes
-      shell: pvscan && pvs=$(pvs --no-h | awk '{print $1}') && for pv in $pvs; do pvremove $pv --force; done && touch "{{locks_path}}/lvm-pvs-cleared.lock"
+      shell: pvscan && pvs=$(pvs --no-h | awk '{print $1}') && for pv in $pvs; do pvremove $pv --force; done && touch "{{ locks_path }}/lvm-pvs-cleared.lock"
       args:
-        creates: "{{locks_path}}/lvm-pvs-cleared.lock"
+        creates: "{{ locks_path }}/lvm-pvs-cleared.lock"
 
     - name: Clear /dev/sd{b,c} disk layout
-      shell: dd if=/dev/zero of=/dev/{{item}} bs=512 count=63 && touch "{{locks_path}}/{{item}}-cleared.lock"
+      shell: dd if=/dev/zero of=/dev/{{ item }} bs=512 count=1 && touch "{{ locks_path }}/{{ item }}-cleared.lock"
       with_items:
         - sdb
         - sdc
       args:
-        creates: "{{locks_path}}/{{item}}-cleared.lock"
+        creates: "{{ locks_path }}/{{ item }}-cleared.lock"
 
     - name: Create LVM resources
-      script: lvm-provision.sh "{{locks_path}}/lvm-provisioned.lock"
+      script: lvm-provision.sh "{{ locks_path }}/lvm-provisioned.lock"
       args:
         creates: /dev/mapper/vms-images
       register: lvm_provisioned
@@ -49,7 +64,7 @@
       when: fs_ready|success
 
     - name: Install required packages
-      apt: name={{item}} state=installed
+      apt: name={{ item }} state=installed
       with_items:
         - ca-certificates
         - git
