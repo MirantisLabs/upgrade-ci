@@ -1,0 +1,19 @@
+#!/bin/sh
+# Update /etc/issue file with IP on interface up
+
+set -e
+
+# skip loopback
+if [ "$IFACE" = lo ]; then
+    exit 0
+fi
+
+# Only run from ifup.
+if [ "$MODE" != start ]; then
+    exit 0
+fi
+
+cp /etc/issue.orig /etc/issue
+echo -n "IP: " >> /etc/issue
+ifconfig $(ip route | awk '/default/ {print $5}') | awk '/inet addr:/ {print $2}' | awk -F: '{print $2}' >> /etc/issue
+echo "" >> /etc/issue
