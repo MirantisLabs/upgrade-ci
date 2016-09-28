@@ -1,0 +1,84 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<project>
+  <actions/>
+  <description>Backup 7.0 without env &#xd;
+Restore on 8.0 &#xd;
+Deploy env with plugin</description>
+  <keepDependencies>false</keepDependencies>
+  <properties>
+    <hudson.model.ParametersDefinitionProperty>
+      <parameterDefinitions>
+        <hudson.model.StringParameterDefinition>
+          <name>CUSTOM_BUILD_ID</name>
+          <description>Build id number</description>
+          <defaultValue>42</defaultValue>
+        </hudson.model.StringParameterDefinition>
+      </parameterDefinitions>
+    </hudson.model.ParametersDefinitionProperty>
+  </properties>
+  <scm class="hudson.scm.NullSCM"/>
+  <canRoam>true</canRoam>
+  <disabled>false</disabled>
+  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+  <triggers/>
+  <concurrentBuild>false</concurrentBuild>
+  <builders>
+    <hudson.tasks.Shell>
+      <command>. ${HOME}/.bash_profile
+
+BUILD_ID=${CUSTOM_BUILD_ID:-${BUILD_ID}}
+BUILD_DIR=&quot;${JOB_NAME##*/}-${BUILD_ID}&quot;
+
+export UPGRADE_FUEL_FROM=7.0
+export UPGRADE_FUEL_TO=8.0
+export LOGS_DIR=${HOME}/logs
+export KEYSTONE_PASSWORD=admin1
+export UPDATE_MASTER=true
+
+export ISO_PATH=${HOME}/iso/MirantisOpenStack-7.0.iso
+export NODES_COUNT=6
+export ENV_NAME=case1_${BUILD_ID}
+export VENV_PATH=${HOME}/working_dir/fuel-devops-venv/
+export FUEL_PROPOSED_REPO_URL=&quot;http://perestroika-repo-tst.infra.mirantis.net/mos-repos/centos/mos7.0-centos6-fuel/proposed/x86_64&quot;
+cd ~
+
+. ${VENV_PATH}/bin/activate
+
+test -d ${BUILD_DIR} || {
+   mkdir ${BUILD_DIR}
+}
+
+cd $BUILD_DIR
+
+cd fuel-qa || {
+   git clone https://github.com/openstack/fuel-qa -b stable/7.0
+   cd fuel-qa
+
+# XXX patch
+   fuel_7_change_smoke_workflow_patch | patch -p1
+
+   pip install -r ./fuelweb_test/requirements.txt --upgrade
+} 
+
+bash -x ./utils/jenkins/system_tests.sh -t test -w $(pwd) -j fuelweb_test -i $ISO_PATH -k -K -o --group=upgrade_smoke_backup
+
+
+cd ..
+export ISO_PATH=${HOME}/iso/MirantisOpenStack-8.0.iso
+export FUEL_PROPOSED_REPO_URL=&quot;http://perestroika-repo-tst.infra.mirantis.net/mos-repos/centos/mos8.0-centos7-fuel/proposed/x86_64/&quot;
+
+cd fuel-qa8 || {
+   git clone https://github.com/openstack/fuel-qa -b stable/8.0 fuel-qa8
+   cd fuel-qa8
+   # XXX patch
+   fuel_8_change_smoke_workflow_patch | patch -p1
+}
+
+bash -x ./utils/jenkins/system_tests.sh -t test -w $(pwd) -j fuelweb_test -i $ISO_PATH -k -K -o --group=upgrade_smoke_restore
+</command>
+    </hudson.tasks.Shell>
+  </builders>
+  <publishers/>
+  <buildWrappers/>
+</project>

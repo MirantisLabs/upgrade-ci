@@ -1,0 +1,126 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<project>
+  <actions/>
+  <description>* - Not implemented&#xd;
+1. Install fuel7.0&#xd;
+2. Deploy cluster HA (ceph, neutron, 3 compute) &#xd;
+3*. Populate cluster&#xd;
+4. Install octane&#xd;
+5. Create backup (master + repo) (upload backup to host machine)&#xd;
+6. Install fuel 8.0&#xd;
+7. Install octane&#xd;
+8*. Patch octane (Patchs ids)&#xd;
+9. Upload backup&#xd;
+10.Restore backup&#xd;
+11*.Fuel create env&#xd;
+12*.Fuel upgrade node --isolate&#xd;
+13*. Octane upgrade db&#xd;
+14*. Octane upgrace CEPH&#xd;
+15*. Upgrade control-plane&#xd;
+16*. Upgrade 2 controoler&#xd;
+17*. Upgrade_ceph osd &#xd;
+18*. Upgrade 3 compute + ceph&#xd;
+19*. Check population&#xd;
+</description>
+  <keepDependencies>false</keepDependencies>
+  <properties>
+    <com.sonyericsson.rebuild.RebuildSettings plugin="rebuild@1.25">
+      <autoRebuild>false</autoRebuild>
+      <rebuildDisabled>false</rebuildDisabled>
+    </com.sonyericsson.rebuild.RebuildSettings>
+    <hudson.model.ParametersDefinitionProperty>
+      <parameterDefinitions>
+        <hudson.model.StringParameterDefinition>
+          <name>CUSTOM_BUILD_ID</name>
+          <description>Build id number</description>
+          <defaultValue>42</defaultValue>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>STABLE7_PATCHES</name>
+          <description>CRs for octane stable/7.0 (separated by space)
+For example: 288133 288134
+
+
+</description>
+          <defaultValue></defaultValue>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>STABLE8_PATCHES</name>
+          <description>CRs for octane stable/8.0 (separated by space)
+For example: 288133 288134
+</description>
+          <defaultValue></defaultValue>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>FUEL_QA_STABLE7_PATCHES</name>
+          <description>CRs for fuel-qa/stable7.0 (separated by space)
+For example: 213321 213432</description>
+          <defaultValue></defaultValue>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>FUEL_QA_STABLE8_PATCHES</name>
+          <description>CRs for fuel-qa/stable8.0 (separated by space)
+For example: 213321 213432</description>
+          <defaultValue></defaultValue>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>FUEL_QA_STABLE7_TESTGROUP</name>
+          <description></description>
+          <defaultValue>upgrade_ceph_ha_backup</defaultValue>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>FUEL_QA_STABLE8_TESTGROUP</name>
+          <description>for live migration test just remove &quot;_no&quot; substring</description>
+          <defaultValue>upgrade_cloud_no_live_migration</defaultValue>
+        </hudson.model.StringParameterDefinition>
+        <org.jvnet.jenkins.plugins.nodelabelparameter.NodeParameterDefinition plugin="nodelabelparameter@1.7.2">
+          <name></name>
+          <description></description>
+          <allowedSlaves>
+            <string>ALL (no restriction)</string>
+          </allowedSlaves>
+          <defaultSlaves/>
+          <triggerIfResult>allowMultiSelectionForConcurrentBuilds</triggerIfResult>
+          <allowMultiNodeSelection>true</allowMultiNodeSelection>
+          <triggerConcurrentBuilds>true</triggerConcurrentBuilds>
+          <ignoreOfflineNodes>false</ignoreOfflineNodes>
+          <nodeEligibility class="org.jvnet.jenkins.plugins.nodelabelparameter.node.AllNodeEligibility"/>
+        </org.jvnet.jenkins.plugins.nodelabelparameter.NodeParameterDefinition>
+      </parameterDefinitions>
+    </hudson.model.ParametersDefinitionProperty>
+  </properties>
+  <scm class="hudson.scm.NullSCM"/>
+  <canRoam>true</canRoam>
+  <disabled>false</disabled>
+  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+  <triggers/>
+  <concurrentBuild>true</concurrentBuild>
+  <builders>
+    <hudson.tasks.Shell>
+      <command>curl -s https://raw.githubusercontent.com/MirantisLabs/upgrade-ci/master/env \
+ https://raw.githubusercontent.com/MirantisLabs/upgrade-ci/master/jobs/upgrade_7_8_cluster.sh | bash -x -</command>
+    </hudson.tasks.Shell>
+  </builders>
+  <publishers>
+    <jenkins.plugins.slack.SlackNotifier plugin="slack@2.0.1">
+      <teamDomain></teamDomain>
+      <authToken></authToken>
+      <buildServerUrl>http://upgrade-ci.bud.mirantis.net/</buildServerUrl>
+      <room></room>
+      <startNotification>true</startNotification>
+      <notifySuccess>true</notifySuccess>
+      <notifyAborted>true</notifyAborted>
+      <notifyNotBuilt>true</notifyNotBuilt>
+      <notifyUnstable>true</notifyUnstable>
+      <notifyFailure>true</notifyFailure>
+      <notifyBackToNormal>true</notifyBackToNormal>
+      <notifyRepeatedFailure>false</notifyRepeatedFailure>
+      <includeTestSummary>false</includeTestSummary>
+      <commitInfoChoice>NONE</commitInfoChoice>
+      <includeCustomMessage>false</includeCustomMessage>
+      <customMessage></customMessage>
+    </jenkins.plugins.slack.SlackNotifier>
+  </publishers>
+  <buildWrappers/>
+</project>

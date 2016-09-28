@@ -1,0 +1,151 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<project>
+  <actions/>
+  <description>1. TODO</description>
+  <keepDependencies>false</keepDependencies>
+  <properties>
+    <com.sonyericsson.rebuild.RebuildSettings plugin="rebuild@1.25">
+      <autoRebuild>false</autoRebuild>
+      <rebuildDisabled>false</rebuildDisabled>
+    </com.sonyericsson.rebuild.RebuildSettings>
+    <hudson.model.ParametersDefinitionProperty>
+      <parameterDefinitions>
+        <hudson.model.StringParameterDefinition>
+          <name>CUSTOM_BUILD_ID</name>
+          <description>Build id number</description>
+          <defaultValue>42</defaultValue>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.BooleanParameterDefinition>
+          <name>live migration</name>
+          <description>Enable/disable live migration for upgrade compute node</description>
+          <defaultValue>false</defaultValue>
+        </hudson.model.BooleanParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>STABLE7_PATCHES</name>
+          <description>CRs for octane stable/7.0 (separated by space)
+For example: 288133 288134
+
+
+</description>
+          <defaultValue></defaultValue>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>STABLE8_PATCHES</name>
+          <description>CRs for octane stable/8.0 (separated by space)
+For example: 288133 288134
+</description>
+          <defaultValue></defaultValue>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>QA_STABLE7_PATCHES</name>
+          <description>CRs for fuel-qa stable/7.0 (separated by space)
+For example: 288133 288134</description>
+          <defaultValue></defaultValue>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>QA_STABLE8_PATCHES</name>
+          <description>CRs for fuel-qa stable/8.0 (separated by space)
+For example: 288133 288134</description>
+          <defaultValue></defaultValue>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>QA_STABLE7_TESTGROUP</name>
+          <description>for example upgrade_plugin_no_cluster_backup</description>
+          <defaultValue></defaultValue>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>QA_STABLE8_TESTGROUP</name>
+          <description>for example upgrade_plugin_no_cluster_tests</description>
+          <defaultValue></defaultValue>
+        </hudson.model.StringParameterDefinition>
+      </parameterDefinitions>
+    </hudson.model.ParametersDefinitionProperty>
+  </properties>
+  <scm class="hudson.scm.NullSCM"/>
+  <canRoam>true</canRoam>
+  <disabled>false</disabled>
+  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+  <triggers/>
+  <concurrentBuild>false</concurrentBuild>
+  <builders>
+    <hudson.tasks.Shell>
+      <command>. ${HOME}/.bash_profile
+
+BUILD_ID=${CUSTOM_BUILD_ID:-${BUILD_ID}}
+
+JOB_MD5SUM=`echo ${JOB_NAME} | md5sum - | cut -d&quot; &quot; -f1`
+
+BUILD_DIR=&quot;${JOB_MD5SUM}-${BUILD_ID}&quot;
+
+export UPGRADE_FUEL_FROM=7.0
+export UPGRADE_FUEL_TO=8.0
+export LOGS_DIR=${HOME}/logs
+export KEYSTONE_PASSWORD=admin1
+export UPDATE_MASTER=true
+
+export ISO_PATH=${HOME}/iso/MirantisOpenStack-7.0.iso
+export NODES_COUNT=6
+export ENV_NAME=custom_job_${BUILD_ID}
+export VENV_PATH=${HOME}/working_dir/fuel-devops-venv/
+export FUEL_PROPOSED_REPO_URL=&quot;http://perestroika-repo-tst.infra.mirantis.net/mos-repos/centos/mos7.0-centos6-fuel/proposed/x86_64&quot;
+cd ~
+
+. ${VENV_PATH}/bin/activate
+
+test -d ${BUILD_DIR} || {
+   mkdir ${BUILD_DIR}
+}
+
+cd $BUILD_DIR
+
+rm -rf fuel-qa7
+git_change_request https://github.com/openstack/fuel-qa stable/7.0 fuel-qa7 $QA_STABLE7_PATCHES
+
+(
+cd fuel-qa7
+pip install -r ./fuelweb_test/requirements.txt --upgrade
+
+
+bash -x ./utils/jenkins/system_tests.sh -t test -w $(pwd) -j fuelweb_test -i $ISO_PATH -k -K -o --group=$QA_STABLE7_TESTGROUP
+)
+
+
+export ISO_PATH=${HOME}/iso/MirantisOpenStack-8.0.iso
+export FUEL_PROPOSED_REPO_URL=&quot;http://perestroika-repo-tst.infra.mirantis.net/mos-repos/centos/mos8.0-centos7-fuel/proposed/x86_64/&quot;
+export UPDATE_MASTER=false
+
+rm -rf fuel-qa8 
+
+git_change_request https://github.com/openstack/fuel-qa stable/8.0 fuel-qa8 $QA_STABLE8_PATCHES
+(
+cd fuel-qa8 
+pip install -r ./fuelweb_test/requirements.txt --upgrade
+
+
+bash -x ./utils/jenkins/system_tests.sh -t test -w $(pwd) -j fuelweb_test -i $ISO_PATH -k -K -o --group=$QA_STABLE8_TESTGROUP
+)</command>
+    </hudson.tasks.Shell>
+  </builders>
+  <publishers>
+    <jenkins.plugins.slack.SlackNotifier plugin="slack@2.0.1">
+      <teamDomain></teamDomain>
+      <authToken></authToken>
+      <buildServerUrl>http://172.18.167.135:8080/</buildServerUrl>
+      <room></room>
+      <startNotification>true</startNotification>
+      <notifySuccess>true</notifySuccess>
+      <notifyAborted>true</notifyAborted>
+      <notifyNotBuilt>false</notifyNotBuilt>
+      <notifyUnstable>false</notifyUnstable>
+      <notifyFailure>true</notifyFailure>
+      <notifyBackToNormal>false</notifyBackToNormal>
+      <notifyRepeatedFailure>false</notifyRepeatedFailure>
+      <includeTestSummary>false</includeTestSummary>
+      <commitInfoChoice>NONE</commitInfoChoice>
+      <includeCustomMessage>false</includeCustomMessage>
+      <customMessage></customMessage>
+    </jenkins.plugins.slack.SlackNotifier>
+  </publishers>
+  <buildWrappers/>
+</project>
