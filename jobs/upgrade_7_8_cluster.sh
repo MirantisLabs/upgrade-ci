@@ -22,7 +22,7 @@ export UPDATE_MASTER=true
 export LOGS_DIR=${BUILD_DIR}/logs
 
 export ISO_PATH=$(download_file_by_magnet `magnet_map 7.0` $BUILD_DIR)
-export NODES_COUNT=9
+export NODES_COUNT=10
 export ENV_NAME=upgrade_MOS_7_8_${BUILD_ID}
 export VENV_PATH=${BUILD_DIR}/fuel-qa-venv
 export FUEL_PROPOSED_REPO_URL="http://perestroika-repo-tst.infra.mirantis.net/mos-repos/centos/mos7.0-centos6-fuel/proposed/x86_64"
