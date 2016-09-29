@@ -1,0 +1,96 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<project>
+  <actions/>
+  <description></description>
+  <keepDependencies>false</keepDependencies>
+  <properties>
+    <hudson.model.ParametersDefinitionProperty>
+      <parameterDefinitions>
+        <hudson.model.StringParameterDefinition>
+          <name>LDAP_SERVER</name>
+          <description>Specify ldap server (or servers separated by space). Examples: &lt;br /&gt; 
+server1.com&lt;br /&gt;
+server1.com server2.com&lt;br /&gt;
+ldap://server1.com&lt;br /&gt;
+ldaps://server1.com&lt;br /&gt;
+</description>
+          <defaultValue></defaultValue>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>LDAP_ACCOUNT</name>
+          <description>Account to query LDAP server (optional). Example:&lt;br /&gt;cn=devops,dc=mydomain,dc=net</description>
+          <defaultValue></defaultValue>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.PasswordParameterDefinition>
+          <name>LDAP_PASSWORD</name>
+          <description>Password to query LDAP server (optional).</description>
+          <defaultValue>1J+dTnMYMwKZ4GVgCvXw99Xst72UCeu3wsRNS3ltTki0Bow2vksQQtlcLXZXIGmt</defaultValue>
+        </hudson.model.PasswordParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>ROOT_DN</name>
+          <description>Example: dc=mydomain,dc=net</description>
+          <defaultValue></defaultValue>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>USER_SEARCH_BASE</name>
+          <description>Search base for user searches (optional).</description>
+          <defaultValue></defaultValue>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>USER_SEARCH_FILTER</name>
+          <description>LDAP filter used to search for users (optional).</description>
+          <defaultValue>uid={0}</defaultValue>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>GROUP_SEARCH_BASE</name>
+          <description>The search base for group membership searches (optional).</description>
+          <defaultValue></defaultValue>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>GROUP_SEARCH_FILTER</name>
+          <description>The LDAP filter to search for groups (optional).</description>
+          <defaultValue></defaultValue>
+        </hudson.model.StringParameterDefinition>
+      </parameterDefinitions>
+    </hudson.model.ParametersDefinitionProperty>
+  </properties>
+  <scm class="hudson.scm.NullSCM"/>
+  <canRoam>true</canRoam>
+  <disabled>false</disabled>
+  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+  <triggers/>
+  <concurrentBuild>false</concurrentBuild>
+  <builders>
+    <hudson.plugins.groovy.SystemGroovy plugin="groovy@1.29">
+      <scriptSource class="hudson.plugins.groovy.StringScriptSource">
+        <command>import jenkins.model.*
+import hudson.security.*
+import org.jenkinsci.plugins.*
+
+def ldap_server         = build.buildVariableResolver.resolve(&quot;LDAP_SERVER&quot;)
+def ldap_account        = build.buildVariableResolver.resolve(&quot;LDAP_ACCOUNT&quot;)
+def ldap_password       = build.buildVariableResolver.resolve(&quot;LDAP_PASSWORD&quot;)
+def root_dn             = build.buildVariableResolver.resolve(&quot;ROOT_DN&quot;)
+def user_search_base    = build.buildVariableResolver.resolve(&quot;USER_SEARCH_BASE&quot;)
+def user_search_filter  = build.buildVariableResolver.resolve(&quot;USER_SEARCH_FILTER&quot;)
+def group_search_base   = build.buildVariableResolver.resolve(&quot;GROUP_SEARCH_BASE&quot;)
+def group_search_filter = build.buildVariableResolver.resolve(&quot;GROUP_SEARCH_FILTER&quot;)
+    
+SecurityRealm ldap_realm = new LDAPSecurityRealm(server = ldap_server, rootDN = root_dn, userSearchBase = user_search_base, userSearch = user_search_filter, groupSearchBase = group_search_base, groupSearchFilter = group_search_base, groupMembershipStrategy = null, managerDN = ldap_account, managerPasswordSecret = ldap_password, inhibitInferRootDN = false, disableMailAddressResolver = false, cache = null);
+Jenkins.instance.setSecurityRealm(ldap_realm)
+
+def strategy = new FullControlOnceLoggedInAuthorizationStrategy()
+strategy.setAllowAnonymousRead(true)
+Jenkins.instance.setAuthorizationStrategy(strategy)
+Jenkins.instance.save()
+
+</command>
+      </scriptSource>
+      <bindings></bindings>
+      <classpath></classpath>
+    </hudson.plugins.groovy.SystemGroovy>
+  </builders>
+  <publishers/>
+  <buildWrappers/>
+</project>
