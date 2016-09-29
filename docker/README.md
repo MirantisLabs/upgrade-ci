@@ -11,3 +11,9 @@ cd upgrade-ci/docker
 sudo docker build -t upgrade-ci .
 sudo docker run -d -p 0.0.0.0:8080:8080 -v jenkins_home:/var/jenkins_home upgrade-ci:latest
 ```
+
+Wait about 3 minutes and then
+
+```
+browser-open http://<DOCKER_HOST_IP_ADDR>:8080/
+```
