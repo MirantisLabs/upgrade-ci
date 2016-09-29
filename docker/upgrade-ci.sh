@@ -75,6 +75,6 @@ upload_jobs ${TMP_DIR}
 
 ${JENKINS_CLI} restart ${JENKINS_CREDS}
 
-jenkins_view_template 'Manage' 'configure_.*'  | ${JENKINS_CLI} create-view Manage
+jenkins_view_template 'Manage' '(configure_.*|.*upgrade-CI.*)'  | ${JENKINS_CLI} create-view Manage
 jenkins_view_template 'Prepare' 'Prepare .*'  | ${JENKINS_CLI} create-view Prepare
 jenkins_view_template 'Upgrade' '.*(-| to ).*'  | ${JENKINS_CLI} create-view Upgrade
