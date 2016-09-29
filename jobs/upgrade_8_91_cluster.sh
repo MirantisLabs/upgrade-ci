@@ -52,7 +52,7 @@ git clone git://github.com/openstack/fuel-devops.git -b release/2.9
 cd fuel-devops
 pip install .
 )
-bash -x ./utils/jenkins/system_tests.sh -t test -w $(pwd) -j fuelweb_test -i $ISO_PATH -k -K -o --group=upgrade_smoke_backup
+bash -x ./utils/jenkins/system_tests.sh -t test -w $(pwd) -j fuelweb_test -i $ISO_PATH -k -K -o --group=${QA_STABLE8_TESTGROUP}
 
 )
 
@@ -83,6 +83,6 @@ pip install .
 )
 
 
-bash -x ./utils/jenkins/system_tests.sh -w $(pwd) -j fuelweb_test -i $ISO_PATH -k -K -o --group=upgrade_smoke_scale -o --group=upgrade_smoke_new_deployment
+bash -x ./utils/jenkins/system_tests.sh -w $(pwd) -j fuelweb_test -i $ISO_PATH -k -K -o --group=${QA_STABLE8_TESTGROUP}
 
 )
