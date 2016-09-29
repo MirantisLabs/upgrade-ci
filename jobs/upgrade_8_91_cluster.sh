@@ -83,6 +83,6 @@ pip install .
 )
 
 
-bash -x ./utils/jenkins/system_tests.sh -w $(pwd) -j fuelweb_test -i $ISO_PATH -k -K -o --group=${QA_STABLE8_TESTGROUP}
+bash -x ./utils/jenkins/system_tests.sh -w $(pwd) -j fuelweb_test -i $ISO_PATH -k -K -o --group=${QA_STABLE9_TESTGROUP}
 
 )
