@@ -37,8 +37,8 @@ EOF
 }
 
 jenkins_view_template() {
-        local TEMPLATE_NAME=$1
-        local TEMPLATE_REGEX=$2
+        local TEMPLATE_NAME="$1"
+        local TEMPLATE_REGEX="$2"
 cat<<EOF
 <?xml version="1.0" encoding="UTF-8"?>
 <hudson.model.ListView>
