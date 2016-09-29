@@ -5,7 +5,7 @@
 
 ```
 # For ubuntu 16.04
-dpkg -l docker.io || apt install -y docker.io
+dpkg -l docker.io || sudo apt install -y docker.io
 git clone https://github.com/MirantisLabs/upgrade-ci
 cd upgrade-ci/docker
 sudo docker build -t upgrade-ci .
