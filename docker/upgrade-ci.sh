@@ -36,6 +36,36 @@ groovy
 EOF
 }
 
+jenkins_view_template() {
+        local TEMPLATE_NAME=$1
+        local TEMPLATE_REGEX=$2
+cat<<EOF
+<?xml version="1.0" encoding="UTF-8"?>
+<hudson.model.ListView>
+  <name>$TEMPLATE_NAME</name>
+  <filterExecutors>false</filterExecutors>
+  <filterQueue>false</filterQueue>
+  <properties class="hudson.model.View$PropertyList"/>
+  <jobNames>
+    <comparator class="hudson.util.CaseInsensitiveComparator"/>
+  </jobNames>
+  <jobFilters/>
+  <columns>
+    <hudson.views.StatusColumn/>
+    <hudson.views.WeatherColumn/>
+    <hudson.views.JobColumn/>
+    <hudson.views.LastSuccessColumn/>
+    <hudson.views.LastFailureColumn/>
+    <hudson.views.LastDurationColumn/>
+    <hudson.views.BuildButtonColumn/>
+  </columns>
+  <includeRegex>$TEMPLATE_REGEX</includeRegex>
+  <recurse>false</recurse>
+</hudson.model.ListView>
+EOF
+}
+
+
 TMP_DIR="upgrade-ci.$$"
 
 cd /tmp
@@ -44,3 +74,7 @@ required_plugin_list | install_plugins
 upload_jobs ${TMP_DIR}
 
 ${JENKINS_CLI} restart ${JENKINS_CREDS}
+
+jenkins_view_template 'Manage' 'configure_.*'  | ${JENKINS_CLI} create-view Manage
+jenkins_view_template 'Prepare' 'Prepare .*'  | ${JENKINS_CLI} create-view Prepare
+jenkins_view_template 'Upgrade' '.*(-| to ).*'  | ${JENKINS_CLI} create-view Upgrade
