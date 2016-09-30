@@ -1,6 +1,6 @@
 FROM ubuntu:xenial
 
-RUN apt-get update && apt-get install -y git curl ansible software-properties-common
+RUN apt-get update && apt-get install -y git curl ansible software-properties-common openjdk-8-jdk
 RUN apt-add-repository -y ppa:ansible/ansible 
 RUN rm -rf /var/lib/apt/lists/* 
 
