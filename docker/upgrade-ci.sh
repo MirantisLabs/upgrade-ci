@@ -33,6 +33,7 @@ nodelabelparameter
 rebuild
 timestamper
 groovy
+github
 EOF
 }
 
