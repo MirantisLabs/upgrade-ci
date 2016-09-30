@@ -1,6 +1,8 @@
-FROM openjdk:8-jdk
+FROM ubuntu:xenial
 
-RUN apt-get update && apt-get install -y git curl ansible && rm -rf /var/lib/apt/lists/* 
+RUN apt-get update && apt-get install -y git curl ansible software-properties-common
+RUN apt-add-repository -y ppa:ansible/ansible 
+RUN rm -rf /var/lib/apt/lists/* 
 
 ENV JENKINS_HOME /var/jenkins_home
 ENV JENKINS_SLAVE_AGENT_PORT 50000
