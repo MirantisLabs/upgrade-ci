@@ -1,0 +1,71 @@
+d-i debian-installer/locale string en_US
+d-i console-setup/ask_detect boolean false
+d-i keyboard-configuration/xkb-keymap select us
+d-i keyboard-configuration/variant select  English (US)
+d-i keyboard-configuration/layout select  English (US)
+d-i netcfg/choose_interface select auto
+d-i netcfg/get_hostname string unassigned-hostname
+d-i netcfg/get_domain string unassigned-domain
+d-i netcfg/wireless_wep string
+d-i mirror/country string manual
+d-i mirror/http/hostname string cz.archive.ubuntu.com
+d-i mirror/http/directory string /ubuntu
+d-i mirror/http/proxy string
+d-i passwd/user-fullname string Ubuntu User
+d-i passwd/username string ubuntu
+d-i user-setup/allow-password-weak boolean true
+d-i user-setup/encrypt-home boolean false
+d-i clock-setup/utc boolean true
+d-i time/zone string Europe/Prague
+d-i clock-setup/ntp boolean true
+d-i partman-auto/disk string /dev/sda
+d-i partman-auto/method string regular
+d-i partman-lvm/device_remove_lvm boolean true
+d-i partman-md/device_remove_md boolean true
+d-i partman-lvm/confirm boolean true
+d-i partman-lvm/confirm_nooverwrite boolean true
+d-i partman-auto/expert_recipe string                         \
+      boot-root ::                                            \
+              1024 50 1024 ext4                               \
+                      $primary{ } $bootable{ }                \
+                      method{ format } format{ }              \
+                      use_filesystem{ } filesystem{ ext4 }    \
+                      mountpoint{ /boot }                     \
+              .                                               \
+              32768 512 32768 linux-swap                      \
+                      $primary{ }                             \
+                      method{ swap } format{ }                \
+              .                                               \
+              32768 10000 -1 ext4                             \
+                      $primary{ }                             \
+                      method{ format } format{ }              \
+                      use_filesystem{ } filesystem{ ext4 }    \
+                      mountpoint{ / }                         \
+              .
+d-i partman-partitioning/confirm_write_new_label boolean true
+d-i partman/choose_partition select finish
+d-i partman/confirm boolean true
+d-i partman/confirm_nooverwrite boolean true
+d-i partman-md/confirm boolean true
+d-i partman-partitioning/confirm_write_new_label boolean true
+d-i partman/choose_partition select finish
+d-i partman/confirm boolean true
+d-i partman/confirm_nooverwrite boolean true
+tasksel tasksel/first multiselect ubuntu-server
+d-i pkgsel/include string openssh-server wget python2.7 curl dstat htop mc telnet tcpdump tmux lvm2 xfsprogs
+d-i pkgsel/upgrade select full-upgrade
+d-i pkgsel/update-policy select none
+popularity-contest popularity-contest/participate boolean false
+d-i grub-installer/only_debian boolean true
+d-i grub-installer/with_other_os boolean true
+d-i grub-installer/bootdev  string /dev/sda
+d-i finish-install/reboot_in_progress note
+d-i debian-installer/exit/poweroff boolean true
+d-i preseed/late_command string \
+    in-target sed -i 's/^%sudo.*$/%sudo ALL=(ALL:ALL) NOPASSWD: ALL/g' /etc/sudoers; \
+    in-target mkdir -p /home/ubuntu/.ssh; \
+    in-target /bin/sh -c "echo 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDjAV5T2mQYgw7nagvQZM7FW8phsCAzRn+PUc/gMnLCvEFQYPEcNS1Luvjc8i+eG1eF7wDVY8/y/8q6yPIl4YQV5YWyOrh62QR3iLw07UJcSPnIXSzUt36xNuDHGhuqOXTyIGTlccysvfpW9sSKYZV7i//j2u1WZl/37wMtxx4E9Sf+I0SL1oQAG1TAdQnDcM4uQu/FCtny8iShHiUPQT6zCybRGhE0eK2QKlZM7blDNuo2/LEg8KXY5gjVuyDqExhaqLttWTEm7vfbThh8yEiLWP08i9FDHr55h1OOUiNsHjr8hV9ZoBjV4Cx46a4qhDzslVOKFIc+PCHDylUjRT4/hd/KT60av+cdKU/0F5efkZmgyHwbSqSVQH1jDMWqiEaVPQUM4IJo5jT+gxwgAkIFTh1RMWR+vM5O96tolmbJZoZhyl9Bh69XJsx+X+uzjdXz2xfixc3E4e5yMoWpHjtS/oSNWDlCJKGWhRMJAsk2VleTI5Pij3afjMGVYnSglPz44lnnjKojD3Vlc8xilX7NXFAQRyTbfX/ONrQ2M5tCFlV7+HrPPpppUvO2lKdV4G0+6WjBup4BUPy+OgWlDIY+8/Q2wcOOHBO1iHkTMeBXyd8r0pTrhFnGtRlSgZzij7fHyyjfTOH9hvPTagOX2/VeCH1K6dNKwVE3kgBiXZ2nMQ==' >> /home/ubuntu/.ssh/authorized_keys"; \
+    in-target chown -R ubuntu:ubuntu /home/ubuntu/; \
+    in-target cp /etc/issue /etc/issue.orig; \
+    in-target wget https://raw.githubusercontent.com/MirantisLabs/upgrade-ci/master/deployment/update-etc-issue -O /etc/network/if-up.d/update-etc-issue; \
+    in-target chmod +x /etc/network/if-up.d/update-etc-issue;
