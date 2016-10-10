@@ -1,0 +1,80 @@
+- hosts: all
+  vars:
+    zabbix_home_dir: /var/lib/zabbix
+  pre_tasks:
+    - name: Ensure that zabbix server was defined
+      assert:
+        that: zabbix_server is defined
+  roles:
+     - role: dj-wasabi.zabbix-agent
+       zabbix_version: 3.2
+       agent_server: "{{ zabbix_server }}"
+       agent_serveractive: "{{ zabbix_server }}"
+       zabbix_url: "http://{{ zabbix_server }}/zabbix"
+       zabbix_api_use: true
+       zabbix_api_user: Admin
+       zabbix_api_pass: zabbix
+       zabbix_api_create_hosts: false
+       zabbix_host_groups:
+         - Linux Servers
+       zabbix_link_templates:
+         - Template OS Linux
+  tasks:
+    - name: Download diskstats configuration
+      become: true
+      get_url:
+        url: https://raw.githubusercontent.com/grundic/zabbix-disk-performance/master/userparameter_diskstats.conf
+        dest: /etc/zabbix/zabbix_agentd.d/userparameter_diskstats.conf
+
+    - name: Download diskstats script
+      become: true
+      get_url:
+        url: https://raw.githubusercontent.com/grundic/zabbix-disk-performance/master/lld-disks.py
+        dest: /usr/local/bin/lld-disks.py
+        mode: 0755
+      notify: Restart zabbix-agent
+
+    - name: Create kvm stats configuration
+      become: true
+      lineinfile:
+        dest: /etc/zabbix/zabbix_agentd.d/userparameter_kvm.conf
+        state: present
+        line: "{{ item }}"
+        create: yes
+      with_items:
+        - "UserParameter=custom.kvm.running.vms,virsh list --all|grep -i running|wc -l"
+        - "UserParameter=custom.kvm.paused.vms,virsh list --all|grep -i paused|wc -l"
+        - "UserParameter=custom.kvm.shutoff.vms,virsh list --all|grep -i 'shut off'|wc -l"
+      notify: Restart zabbix-agent
+
+    - name: Create fuel-devops stats configuration
+      become: true
+      lineinfile:
+        dest: /etc/zabbix/zabbix_agentd.d/userparameter_fueldevops.conf
+        state: present
+        line: "UserParameter=custom.fueldevops.envs,/bin/bash -c 'source /var/lib/zabbix/devops/bin/activate && dos.py list | wc -l'"
+        create: yes
+      notify: Restart zabbix-agent
+
+    - name: Create {{ zabbix_home_dir }} directory
+      become: true
+      file: path={{ zabbix_home_dir }} state=directory owner=zabbix
+
+    - name: Install fuel-devops in virtualenv
+      become: true
+      pip: name='https://github.com/openstack/fuel-devops/archive/release/2.9.zip' virtualenv="{{ zabbix_home_dir }}/devops" virtualenv_site_packages=yes
+
+    - name: Add user zabbix to group libvirtd
+      become: true
+      user:
+        append: yes
+        name: zabbix
+        groups: libvirtd
+      notify: Restart zabbix-agent
+
+  handlers: 
+    - name: Restart zabbix-agent
+      become: true
+      service:
+        name: zabbix-agent
+        state: restarted
